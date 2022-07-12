@@ -1,0 +1,13 @@
+#1차 풀이
+SELECT A.firstName, A.lastName, B.city, B.state
+FROM PERSON A LEFT JOIN ADDRESS B
+ON A.personId = B.personId
+WHERE A.personId IS NULL;
+
+#2차 풀이
+SELECT A.firstName, A.lastName, B.city, B.state
+FROM PERSON A LEFT JOIN ADDRESS B
+ON A.personId = B.personId;
+
+#주소 테이블에 personId의 주소가 없는 경우 대신 null을 보고 해야하기 때문에 
+#is null을 사용했는데 left join을 사용하면 null처리를 굳이 해줄 필요가 없었다.
