@@ -17,7 +17,7 @@ for step in steps:
     next_row = row + step[0]
     next_colum = column + step[1]
     #해당 위치로 이동이 가능하다면 카운트 증가
-    if next_row >= 1 and next_row <= 8 and next_colum >= 1 and next_colum < 8:
+    if next_row >= 1 and next_row <= 8 and next_colum >= 1 and next_colum <= 8:
         result += 1
 
 print(result)
