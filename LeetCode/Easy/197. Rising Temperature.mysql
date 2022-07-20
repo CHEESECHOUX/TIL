@@ -1,0 +1,18 @@
+##
+#SELF JOIN 문제
+#1차시도 : LEAD를 사용하려 했으나...
+SELECT 
+    id
+    LEAD(temperature, 1) OVER (
+        PARTTION BY id
+        ORDER BY temperature)
+FROM Weather;
+##
+
+#정답 : JOIN의 ON에서 DATEDIFF를 사용할 수 있다!
+SELECT A.id AS id
+FROM Weather A 
+JOIN Weather B
+    ON DATEDIFF(A.recordDate, B.recordDate) = 1
+    AND A.temperature > B.temperature;
+##
