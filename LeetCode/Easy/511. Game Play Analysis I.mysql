@@ -1,0 +1,23 @@
+##
+#1차시도
+SELECT A.player_id, A.event_date AS first_login
+FROM Activity A
+JOIN Activity B
+    ON A.player_id = B.player_id
+    ORDER BY A.event_date ASC LIMIT 1
+#    
+#2차시도 : Ranking이 column으로 row는 1로 모두 출력된다...
+SELECT *
+FROM (
+    SELECT player_id, event_date AS first_login, RANK() OVER(PARTITION BY player_id ORDER BY event_date ASC) AS Ranking
+    FROM Activity ) AS Ranked
+WHERE Ranked.ranking = 1
+#
+#3차시도! 성공!
+#player_id로 묶어주고 event_date순으로 정렬해주고 /ranking이라는 컬럼을 가진 테이블에 where 조건을 걸어준다. /마지막으로 원하는 값만 select로 뽑아내기
+SELECT player_id, event_date AS first_login
+FROM (
+    SELECT player_id, event_date, RANK() OVER(PARTITION BY player_id ORDER BY event_date ASC) AS Ranking
+    FROM Activity ) AS Ranked
+WHERE Ranked.Ranking = 1
+##
