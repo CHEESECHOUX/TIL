@@ -1,0 +1,33 @@
+##
+#1차시도 : article_id가 일단 같아야 하고 그 다음에 author_id와 viewer_id가 같아야 하는 것 같다.
+SELECT DISTINCT(A.author_id) AS id
+FROM Views A
+WHERE A.author_id IN(
+    SELECT viewer_id
+    FROM Views B)
+ORDER BY A.author_id ASC;
+
+#2차시도 : article_id로 교집합해주고 author_id, viewer_id 같게 해주면 되는거 아닌가?
+SELECT DISTINCT(B.author_id) AS id
+FROM Views B
+LEFT JOIN Views C
+ON B.author_id = C.viewer_id
+    JOIN Views A
+    ON A.article_id = B.article_id
+
+
+
+#정답 : 아니 이게 뭐지... 이렇게 간단하다고?
+SELECT DISTINCT author_id AS id 
+FROM Views 
+WHERE author_id = viewer_id 
+ORDER BY id
+##
+
+#이것도 JOIN으로 똑같이 테이블 교집합인데... 왜 안 되는 거지?
+SELECT DISTINCT A.author_id AS id
+FROM Views A
+JOIN Views B
+ON A.author_id = B.viewer_id
+ORDER BY id
+##
