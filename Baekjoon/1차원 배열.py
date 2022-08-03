@@ -88,4 +88,65 @@ for i in score:
     result.append(i/m*100)
 
 print(sum(result)/n)
+
+
+##
+#8958
+#내가 풀어본 코드 : 이렇게 되면 연속된 0 갯수가 적용이 안 된다
+n = int(input())
+result = []
+o = []
+x = []
+
+for i in range(n):
+    result.append(input().split())
+    if i == 0:
+        o += 1
+    elif i[0] == i[1]: #앞의 인덱스값과 비교해야할 것 같은데... 모르겠다
+        o = 1 + #중복된 값만큼
+
+print(o*1)
+
+#정답
+#0일 때 연속해서 몇 번 0이 들어왔는지 카운트
+#X라면 카운트를 0으로 초기화
+n = int(input())
+
+for i in range(n):
+    scores = input()
+    score = 0
+    sum = 0
+    for j in scores:
+        if j == 'O':
+            score += 1
+        else:
+            score = 0
+        sum += score
+
+    print(sum)
+        
+        
+##
+#4344
+#내가 풀어본 코드
+c = int(input())
+
+for _ in range(c):
+    score = map(int, input().split())
+    student = score[0]
+    for score in scores: #학생수를 제외한 점수들 다 어떻게 더하지..?
+    
+#정답
+c = int(input())
+
+for _ in range(c):
+    scores = list(map(int, input().split()))
+    avg = sum(scores[1:])/scores[0]
+    count = 0
+    for score in scores:
+        if score > avg:
+            count += 1
+    rate = count/scores[0] * 100
+
+    print('f{rate:.3f}%')
 ##
