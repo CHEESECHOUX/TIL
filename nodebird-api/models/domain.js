@@ -25,6 +25,8 @@ module.exports = class Domain extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Domain.belongsTo(db.User);
+    db.Domain.belongsTo(db.User, 
+      //{foreignkey : 'userId'}
+      );
   }
 };
