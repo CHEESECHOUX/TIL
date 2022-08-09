@@ -140,4 +140,61 @@ for j in range(len(word)):
             time += alpabet.index(i) +3 #다이얼을 돌릴 때 1을 누르는데 2초가 걸리고, index는 0부터 시작하므로 3을 더해준다
             
 print(time)
+
+##
+#2941
+#정답 : 와오,, 어려워
+#2,3글자로 이루어진 8개의 알파벳이 있는 경우 한 글자로 변환하고 이후에 변환된 문자열의 총 글자수를 센다
+
+alphabet = ['c=', 'c-', 'dz=', 'd-', 'lj', 'nj', 's=', 'z=']
+word = input()
+
+
+for i in alphabet:
+    word = word.replace(i, '*') #replace 함수는 함수를 사용한 문자열 원형을 변형시키지 않아 변수명을 똑같이 word로 작성. 알파벳이 있다면 *로 변형
+
+print(len(word))
+
+
+##
+#1316
+#내가 풀어본 코드
+n = int(input())
+
+for _ in range(n):
+    word = input()
+    for i in word:
+        if word[i] == word[i+1]:
+
+#정답 1
+n = int(input())
+
+group = 0
+for _ in range(n):
+    word = input()
+    error = 0
+    for i in range(0, len(word)-1): #인덱스 범위 0부터 단어개수 -1까지
+        if word[i] != word[i+1]: #연속으로 된 두 글자가 다르다면
+            new = word[i+1:] #현재 글자 이후 문자열을 새로운 단어로 
+            if new.count(word[i]) > 0: #남은 문자열에 현재 글자가 있다면
+                error += 1 
+    if error == 0:
+        group += 1 #error가 0이면 그룹단어
+
+print(group)
+
+#정답 2
+n = int(input())
+result = n
+
+for _ in range(n):
+    word = input()
+    for i in range(0, len(word)-1):
+        if word[i] == word[i+1]:
+            pass
+        elif word[i] in word[i+1]:
+            result -= 1
+            break
+
+print(result)
 ##
