@@ -40,5 +40,22 @@ for i in range(t):
         num = n // h
         floor = h
 
-print(f'{floor*100+num}')
+    print(f'{floor*100+num}')
+##
+
+#내가 처음에 생각했던 코드로 하려면 이렇게 해야됐음!
+t = int(input())
+
+for i in range(t):
+    h, w, n = map(int, input().split())
+    floor = 0
+    num = 0
+    
+    if n % h == 0:
+        floor = h * 100
+        num = n // h
+    else:
+        floor = (n % h) * 100
+        num = n // h + 1
+    print(floor + num)
 ##
