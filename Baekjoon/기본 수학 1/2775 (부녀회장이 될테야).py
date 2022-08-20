@@ -28,6 +28,6 @@ for i in range(t):
 
     for x in range(k):
         for y in range(1, n): 
-            people[y] += people[y-1] #층별 각 호실의 사람 수를 변경
+            people[y] += people[y-1] #층별 각 호실의 사람 수를 변경 / 층수가 증가할 때마다 한층 아래층의 이전 호실에 사는 사람의 숫자를 더하는 것!!!!
     print(people[-1]) #가장 마지막 수 출력
 ##
