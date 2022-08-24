@@ -1,0 +1,48 @@
+##
+#1차시도 : refree_id 가 1인 애들이 안 나온다...
+#id가 겹치는 애들이 아니라 referee_id가 2인 고객을 참조하지 않는 고객의 이름!을 찾는 것!
+SELECT A.name
+FROM Customer A
+LEFT JOIN Customer B
+ON A.referee_id = B.id
+WHERE B.id IS NULL;
+#
+
+#2차시도 : FULL OUTER JOIN 구현 해보려했음...
+SELECT name
+FROM (
+    SELECT *
+    FROM Customer A
+    LEFT JOIN Customer B ON A.id = B.id
+    UNION
+    SELECT *
+    FROM Customer A
+    RIGHT JOIN Customer B ON A.id = B.id ) AS C
+GROUP BY C.referee_id = 2
+HAVING C.id IS NULL;
+#
+
+#3차시도 : refree_id가 null 값인 애들이 안 나온다..
+SELECT A.name
+FROM Customer A
+LEFT JOIN Customer B
+ON A.id = B.id
+WHERE A.referee_id NOT LIKE "%2%";
+##
+
+
+##
+#정답 : LEFT JOIN 사용할 필요도 없었다...! OR를 잘 못 이해하고 있었다.
+SELECT name
+FROM Customer
+WHERE referee_id NOT LIKE "2"
+OR referee_id IS NULL;
+
+#굳이 LEFT JOIN 쓴다면 이렇게도 사용 가능하긴 함...
+SELECT A.name
+FROM Customer A
+LEFT JOIN Customer B
+ON A.id = B.id
+WHERE A.referee_id NOT LIKE "%2%"
+OR A.referee_id IS NULL;
+##

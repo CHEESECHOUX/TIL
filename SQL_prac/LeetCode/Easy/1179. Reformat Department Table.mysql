@@ -1,0 +1,30 @@
+##
+#내가 풀어본 코드
+#피벗을 이용해서 푸는 것 같은데...
+#일단 month별로 정리해서 revenue 값 가져오는거 ,, 와오 징짜 모르겠다...
+SELECT id, 
+    (SUM(CASE WHEN month = 'Jan'), null) AS 'Jan_Revenue',
+    (SUM(CASE WHEN month = 'Feb'), null) AS 'Feb_Revenue',
+    (SUM(CASE WHEN month = 'Mar'), null) AS 'Mar_Revenue'
+    
+FROM Department
+
+
+#정답 : THEN ELSE로 값들을 추가해주면 됐다....
+SELECT id,
+    SUM(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,
+    SUM(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue,
+    SUM(CASE WHEN month = 'Mar' THEN revenue ELSE NULL END) AS Mar_Revenue,
+    SUM(CASE WHEN month = 'Apr' THEN revenue ELSE NULL END) AS Apr_Revenue,
+    SUM(CASE WHEN month = 'May' THEN revenue ELSE NULL END) AS May_Revenue,
+    SUM(CASE WHEN month = 'Jun' THEN revenue ELSE NULL END) AS Jun_Revenue,
+    SUM(CASE WHEN month = 'Jul' THEN revenue ELSE NULL END) AS Jul_Revenue,
+    SUM(CASE WHEN month = 'Aug' THEN revenue ELSE NULL END) AS Aug_Revenue,
+    SUM(CASE WHEN month = 'Sep' THEN revenue ELSE NULL END) AS Sep_Revenue,
+    SUM(CASE WHEN month = 'Oct' THEN revenue ELSE NULL END) AS Oct_Revenue,
+    SUM(CASE WHEN month = 'Nov' THEN revenue ELSE NULL END) AS Nov_Revenue,
+    SUM(CASE WHEN month = 'Dec' THEN revenue ELSE NULL END) AS Dec_Revenue
+FROM Department
+GROUP BY id
+ORDER By id;
+##

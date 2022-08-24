@@ -1,0 +1,17 @@
+##
+#1차 시도 : SELECT 사용하지 말라고 해서,, UPDATE문 raw 여러개 어떻게 하는 걸까
+UPDATE Salary
+SET sex = 'm' 
+WHERE sex ='f';
+UPDATE Salary
+SET sex = 'f'
+WHERE sex = 'm';
+
+#정답 : SET, CASE, WHEN, THEN 사용법 공부해야겠다...
+UPDATE Salary
+SET
+sex = CASE sex
+    WHEN 'm' THEN 'f'
+    ELSE 'm'
+END;
+##

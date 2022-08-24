@@ -1,0 +1,42 @@
+##
+#1차시도 : 일단 RED 아닌 것 출력
+SELECT A.name
+FROM Company A
+LEFT JOIN Orders B 
+    ON B.com_id = A.com_id
+WHERE A.name NOT IN ("RED")
+
+##
+#2차시도 : JOIN으로 묶어서 A의 회사이름이 아닌 C의 SalesPerson name을 출력하려고 했지만,, 안 돼따..
+SELECT C.name
+FROM Company A
+LEFT JOIN Orders B 
+    ON B.com_id = A.com_id
+JOIN SalesPerson C
+    ON B.sales_id = C.sales_id
+WHERE A.name NOT IN ("RED")
+
+
+##
+#정답... 와오.. JOIN 사용할 필요도 없었다.
+#RED 회사에서 주문한 com_id를 찾고, sales_id를 찾은 후, 그 sales_id를 포함하지 않는 salesperson name을 출력
+SELECT name
+FROM Salesperson
+WHERE Sales_id NOT IN (
+    SELECT Sales_id
+    FROM Orders
+    WHERE com_id = (
+        SELECT com_id
+        FROM company A
+        WHERE A.name = 'RED'))
+        
+#정답 : LEFT JOIN을 활용
+#LEFT JOIN으로 Orders와 Company 테이블에서 RED회사에서 주문한 sales_id를 찾고, 그 sales_id를 포함하지 않는 값을 찾는다
+SELECT A.name
+FROM SalesPerson A
+WHERE A.sales_id NOT IN (
+    SELECT B.sales_id
+    FROM Orders B
+        LEFT JOIN Company C ON B.com_id = C.com_id
+        WHERE C.name = 'RED')
+##

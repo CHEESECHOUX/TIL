@@ -1,0 +1,40 @@
+##
+#1차시도 : director_id 자체가 중복인 값을 출력한다
+SELECT A.actor_id, A.director_id
+FROM ActorDirector A
+LEFT JOIN ActorDirector B
+ON A.actor_id = B.actor_id
+GROUP BY director_id
+HAVING director_id < 3;
+##
+
+#2차시도 : 3이상으로 중복된 director_id를 찾아서 출력하려고 했는데, actor_id 마다 해당되는 director_id 중복의 값인걸 간과했다...
+SELECT actor_id, director_id
+FROM ActorDirector
+GROUP BY actor_id NOT IN(
+    SELECT director_id
+    FROM ActorDirector
+    WHERE director_id IN(
+        SELECT director_id
+        FROM ActorDirector
+        GROUP BY director_id
+        HAVING COUNT(*) > 2
+        ));
+        
+#3차시도 : actor_id 마다 해당되는 director_id의 중복의 값까지는 출력했는데... COUNT 컬럼을 제외한 actor_id와 director_id 만 출력하는 방법을 모르겠음...
+SELECT actor_id, director_id
+FROM ActorDirector
+WHERE actor_id IN (
+    SELECT actor_id, director_id, COUNT(1) AS COUNT
+    FROM ActorDirector
+    GROUP BY actor_id, director_id
+    HAVING COUNT > 2
+    );
+##
+
+#정답 : AND COUNT라니!!!!!!!!!!! 와... 이런게 가능한지 상상도 못했다
+SELECT actor_id, director_id
+FROM ActorDirector
+GROUP BY actor_id, director_id
+HAVING COUNT(actor_id) > 2 AND COUNT(director_id) > 2;
+##
