@@ -1,4 +1,4 @@
-const Product = require('../models/product');
+const Product = require('../../models/product');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/add-product', { 
@@ -10,12 +10,13 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
-exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title;
+exports.postAddProduct = (req, res, next) => { // 제품 데이터 저장. view의 add-product에서 할당한 것과 똑같이 작성
+  // const product = new Product(req.body.title);
+  const title = req.body.title; // 데이터 추출
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, imageUrl, description, price);
+  const product = new Product(title, imageUrl, description, price); // 담기
   product.save();
   res.redirect('/');
 };

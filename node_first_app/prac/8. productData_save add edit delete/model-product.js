@@ -17,7 +17,11 @@ const getProductsFormFile = (cb) => {
   });
 };
 
-module.exports = class Product {
+// module.exports = class Product { 
+//   constructor(t) {
+//       this.title = t;
+//   }
+module.exports = class Product { // 제품 데이터 저장 add-product
   constructor(title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
