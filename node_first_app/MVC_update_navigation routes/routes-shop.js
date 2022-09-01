@@ -6,7 +6,7 @@ const shopController = require('../controllers/shop');
 
 const router = express.Router();
 
-router.get('/', shopController.getIndex);
+router.get('/', shopController.getIndex); // 시작페이지
 
 router.get('/products', shopController.getProducts);
 
