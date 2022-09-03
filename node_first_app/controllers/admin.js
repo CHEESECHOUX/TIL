@@ -41,7 +41,7 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const prodId = req.body.prodId;
+  const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatePrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
@@ -51,8 +51,8 @@ exports.postEditProduct = (req, res, next) => {
     updatedTitle,  
     updatedImageUrl, 
     updatedDesc, 
-    updatePrice)
-  ;
+    updatePrice
+  );
   updatedProduct.save();
   res.redirect('/admin/products');
 };

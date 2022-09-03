@@ -27,18 +27,20 @@ module.exports = class Product {
   }
 
   save() {
-    getProductsFormFile(products => { 
+    getProductsFromFile(products => {
       if (this.id) {
-        const existingProductIndex = products.findIndex(prod => prod.id === this.id);
+        const existingProductIndex = products.findIndex(
+          prod => prod.id === this.id
+        );
         const updatedProducts = [...products];
         updatedProducts[existingProductIndex] = this;
-        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        fs.writeFile(p, JSON.stringify(updatedProducts), err => {
           console.log(err);
         });
       } else {
         this.id = Math.random().toString(); // product id 만들어주기 (위에 export할 때 만들어줘도 되고 save 할 때 만들어줘도 됨)
         products.push(this);
-        fs.writeFile(p, JSON.stringify(products), (err) => {
+        fs.writeFile(p, JSON.stringify(products), err => {
           console.log(err);
         });
       }

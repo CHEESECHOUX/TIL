@@ -12,7 +12,7 @@ module.exports = class Cart {
   static addProduct(id, productPrice) { // 추가하길 원하는 제품의 id // totalPrice 하기위해 productPrice 불러옴
     // 기존 또는 이전 cart를 파일에서 불러온 다음
     fs.readFile(p, (err, fileContent) => {
-      let cart = { product: [], totalPrice: 0 };
+      let cart = { products: [], totalPrice: 0 };
       if (!err) {
         cart = JSON.parse(fileContent);
       }
@@ -33,7 +33,7 @@ module.exports = class Cart {
         cart.products = [...cart.products, updatedProduct];
       }
       cart.totalPrice = cart.totalPrice + +productPrice;
-      fs.writeFile(p, JSON.stringify(cart), (err) => {
+      fs.writeFile(p, JSON.stringify(cart), err => {
         console.log(err);
       });
     });
