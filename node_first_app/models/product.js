@@ -1,4 +1,4 @@
-const fs = require('fs'); 
+const fs = require('fs');
 const path = require('path');
 
 const Cart = require('./cart');
@@ -57,8 +57,8 @@ module.exports = class Product {
         if (!err) {
           Cart.deleteProduct(id, product.price);
         }
-      });                                   
-    });  
+      });
+    });
   }
 
   static fetchAll(cb) {
@@ -67,7 +67,7 @@ module.exports = class Product {
 
   static findById(id, cb) {
     getProductsFromFile(products => {
-      const product = products.find(p => p.id === id); 
+      const product = products.find(p => p.id === id);
       cb(product);
     });
   }
