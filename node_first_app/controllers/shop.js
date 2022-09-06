@@ -1,24 +1,36 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
-exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+exports.getProducts = (req, res, next) => { // Products 페이지
+  Product.findAll()
+    .then(products => {
       res.render('shop/product-list', {
-        prods: rows,
+        prods: products,
         pageTitle: 'All Products',
         path: '/products'
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+    });
 };
 
+// findAll, findByPk 둘 다 사용 가능
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([product]) => {
+  // Product.findAll({where: { id: prodId } }) 
+  //   .then(products => {
+  //     res.render('shop/product-detail', {
+  //       product: products[0], // findAll 함수는 디폴트로 배열을 줌 0으로 잡아줘야함
+  //       pageTitle: products[0].title,
+  //       path: '/products'
+  //     });
+  //   })
+  //   .catch(err => console.log(err));
+  Product.findByPk(prodId) 
+    .then(product => {
       res.render('shop/product-detail', {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: '/products'
       });
@@ -26,16 +38,18 @@ exports.getProduct = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+exports.getIndex = (req, res, next) => { // Shop 페이지
+  Product.findAll()
+    .then(products => {
       res.render('shop/index', {
-        prods: rows,
+        prods: products,
         pageTitle: 'Shop',
         path: '/'
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getCart = (req, res, next) => {
