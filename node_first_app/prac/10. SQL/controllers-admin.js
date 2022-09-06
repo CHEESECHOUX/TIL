@@ -17,7 +17,7 @@ exports.postAddProduct = (req, res, next) => {
   product
     .save()
     .then(() => {
-      res.redirect('/');
+      res.redirect('/'); // 삽입이 완료 되면 redirect
     })
     .catch(err => console.log(err));
 };

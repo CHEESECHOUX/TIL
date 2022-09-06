@@ -11,6 +11,11 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch(err => console.log(err));
+  //   res.render('shop/product-list', { // callback을 promise로 바꾸기 위해 삭제
+  //     prods: products,
+  //     pageTitle: 'All Products',
+  //     path: '/products'
+  //   });
 };
 
 exports.getProduct = (req, res, next) => {
