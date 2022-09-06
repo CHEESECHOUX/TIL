@@ -13,13 +13,24 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(null, title, imageUrl, description, price);
-  product
-    .save()
-    .then(() => {
-      res.redirect('/');
+  Product.create({ // sequelize로 db에 저장하기
+    title: title, // const title: 모델 title
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  })
+    .then(result => {
+      console.log(result);
+      // console.log('Created Product');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err)
+  });
+    // .save()
+    // .then(() => {
+    //   res.redirect('/');
+    // })
+    // .catch(err => console.log(err));
 };
 
 exports.getEditProduct = (req, res, next) => {
