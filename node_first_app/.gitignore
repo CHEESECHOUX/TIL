@@ -132,4 +132,4 @@ dist
 # config
 .config/config.json
 
-.util/database.js
+util/database.js
