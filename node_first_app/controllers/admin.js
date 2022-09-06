@@ -14,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   Product.create({ // sequelize로 db에 저장하기
-    title: title, // const title: 모델 title
+    title: title,  // const title: 모델 title
     price: price,
     imageUrl: imageUrl,
     description: description,
@@ -38,18 +38,21 @@ exports.getEditProduct = (req, res, next) => {
   if (!editMode) {
     return res.redirect('/');
   }
-  const prodId = req.params.productId;
-  Product.findById(prodId, product => {
+  const prodId = req.params.productId; // 제품id검색
+  Product.findByPk(prodId)
+  .then(product => {
     if (!product) {
-      return res.redirect('/');
+      return res.redirect('/'); // 제품이 없으면 redirect
     }
-    res.render('admin/edit-product', {
+    res.render('admin/edit-product', { // 제품 있으면 로드된 제품과 뷰를 렌더링
       pageTitle: 'Edit Product',
       path: '/admin/edit-product',
       editing: editMode,
       product: product
     });
-  });
+  })
+  .catch(err => console.log(err)
+  );
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -58,24 +61,32 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
-  const updatedProduct = new Product(
-    prodId,
-    updatedTitle,
-    updatedImageUrl,
-    updatedDesc,
-    updatedPrice
-  );
-  updatedProduct.save();
-  res.redirect('/admin/products');
+  Product.findByPk(prodId)                // 변경하길원하는 요소를 데이터베이스에서 찾기
+    .then(product => {                    // 검색한 product
+      product.title = updatedTitle;       // 데이터베이스가 아닌 로컬에서만 update
+      product.price = updatedPrice;
+      product.description = updatedDesc;
+      product.imageUrl = updatedImageUrl;
+      return product.save();              // 데이터베이스까지 update
+    })
+    .then(result => {                     // save promise 응답 처리
+      console.log('UPDATED PRODUCT!');
+      res.redirect('/admin/products');
+    }) 
+    .catch(err => console.log(err));      // 첫번째 promise catch, 두번째 promise findByPk 응답 처리
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.findAll()
+  .then(products => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
       path: '/admin/products'
     });
+  })
+  .catch(err => {
+    console.log(err);
   });
 };
 
