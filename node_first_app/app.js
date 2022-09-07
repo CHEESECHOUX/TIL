@@ -7,6 +7,8 @@ const errorController = require('./controllers/error');
 const sequelize = require('./util/database');
 const Product = require('./models/product');
 const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 
 const app = express();
 
@@ -38,10 +40,14 @@ app.use(errorController.get404);
 // 위에서 모델을 임포트해서 sequelize와 연 관지어줌
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' }); // 사용자를 삭제하면 사용자에 관련된 정보도 사라짐
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize                         // sequelize 동기화
-  // .sync({ force: true })       // 새로운 코드 db에 적용시키기 (매번 데이터가 사라지니까 주석처리)
-  .sync()
+  .sync({ force: true })       // 새로운 코드 db에 적용시키기 (매번 데이터가 사라지니까 주석처리)
+  // .sync()
   .then(result => {               // sync는 모든 모델을 불러옴
     return User.findByPk(1);
     // console.log(result);
