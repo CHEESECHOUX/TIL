@@ -13,11 +13,11 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  Product.create({ // sequelize로 db에 저장하기
+  req.user.createProduct({ // 요청에 저장되어 있는 사용자 객체를 사용하는 것 // sequelize에서 관계설정을 할 수 있도록 도와줌
     title: title,  // const title: 모델 title
     price: price,
     imageUrl: imageUrl,
-    description: description,
+    description: description
   })
     .then(result => {
       // console.log(result);
