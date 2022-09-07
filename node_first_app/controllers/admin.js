@@ -40,8 +40,10 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/');
   }
   const prodId = req.params.productId; // 제품id검색
-  Product.findByPk(prodId)
-  .then(product => {
+  req.user.getProducts({where: {id: prodId}}) // 현재 접속중인 사용자에 대한 제품만 가져오기
+  // Product.findByPk(prodId)
+  .then(products => {
+    const product = products[0]; // 배열을 리턴받기 때문에 하나를 잡아줘야함
     if (!product) {
       return res.redirect('/'); // 제품이 없으면 redirect
     }
@@ -73,12 +75,14 @@ exports.postEditProduct = (req, res, next) => {
     .then(result => {                     // save promise 응답 처리
       console.log('UPDATED PRODUCT!');
       res.redirect('/admin/products');
-    }) 
+    })
     .catch(err => console.log(err));      // 첫번째 promise catch, 두번째 promise findByPk 응답 처리
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  // Product.findAll()
+  req.user                                // 사용자의 제품을 가져오는 것으로 변경
+  .getProducts() 
   .then(products => {
     res.render('admin/products', {
       prods: products,
