@@ -53,40 +53,70 @@ exports.getIndex = (req, res, next) => { // Shop 페이지
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getCart(cart => {
-    Product.fetchAll(products => {
-      const cartProducts = [];
-      for (product of products) {
-        const cartProductData = cart.products.find(
-          prod => prod.id === product.id
-        );
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
-      res.render('shop/cart', {
-        path: '/cart',
-        pageTitle: 'Your Cart',
-        products: cartProducts
-      });
-    });
-  });
+  req.user.getCart()                     // 장바구니 가져와서
+  .then(cart => {
+    return cart
+      .getProducts()                     // 장바구니 안에 있는 제품 가져오기
+      .then(products => {
+        res.render('shop/cart', {
+          path: '/cart',
+          pageTitle: 'Your Cart',
+          products: products
+        });
+      })
+      .catch(err => console.log(err)); 
+  })
+  .catch(err => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, product => {
-    Cart.addProduct(prodId, product.price);
-  });
-  res.redirect('/cart');
+  let fetchedCart;
+  let newQuantity = 1; // 기본 수량 1
+  req.user
+    .getCart()
+    .then(cart => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: {id: prodId} });
+    })
+    .then(products => {
+      let product;
+      if (products.length > 0) {      // 장바구니에 제품이 존재한다면 
+      product = products[0];
+      }
+
+      if (product) {                  // 장바구니에 존재하는 제품의 수량 변경
+        const oldQuantity = product.cartItem.quantity;
+        newQuantity = oldQuantity + 1;
+        return product;
+      }
+      return Product.findByPk(prodId) // 장바구니에 제품이 없다면 새로 제품 추가
+    })
+    .then(product => {
+      return fetchedCart.addProduct(product, { // addProduct는 sequelize 다대다 메서드
+        through: { quantity: newQuantity }     // cart-item 추가한 필드 설정.
+      });
+    })
+    .then(() => {
+      res.redirect('/cart');
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, product => {
-    Cart.deleteProduct(prodId, product.price);
+  req.user.getCart()                     // cart에서 해당 사용자를 위한 제품을 가져오기 (prodId를 가진 제품)
+  .then(cart => {
+    return cart.getProducts({ where: { id: prodId } });
+  })
+  .then(products => {
+    const product = products[0];         // 해당 제품을 가져옴
+    return product.cartItem.destroy();   // 해당 제품을 cart-item에서만 삭제하기
+  })
+  .then(result => {
     res.redirect('/cart');
-  });
+  })
+  .catch(error => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {

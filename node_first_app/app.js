@@ -46,8 +46,8 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize                         // sequelize 동기화
-  .sync({ force: true })       // 새로운 코드 db에 적용시키기 (매번 데이터가 사라지니까 주석처리)
-  // .sync()
+  // .sync({ force: true })       // 새로운 코드 db에 적용시키기 (매번 데이터가 사라지니까 주석처리)
+  .sync()
   .then(result => {               // sync는 모든 모델을 불러옴
     return User.findByPk(1);
     // console.log(result);
@@ -61,6 +61,10 @@ sequelize                         // sequelize 동기화
   })
   .then(user => {                 // 위에 then 블록값이 새 promise에 포함돼서 여기에선 자동으로 관리됨
     // console.log(user);
+    return user.createCart();
+  
+  })
+  .then(cart => {
     app.listen(3000);
   })                         
   .catch(err => {
