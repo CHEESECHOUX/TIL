@@ -1,5 +1,6 @@
+const OrderItem = require('../models/order-item');
 const Product = require('../models/product');
-const Cart = require('../models/cart');
+// const Cart = require('../models/cart'); // User 모델을 통해 Cart에 접근해서 삭제
 
 exports.getProducts = (req, res, next) => { // Products 페이지
   Product.findAll()
@@ -119,16 +120,42 @@ exports.postCartDeleteProduct = (req, res, next) => {
   .catch(error => console.log(err));
 };
 
-exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders'
-  });
+exports.postOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user.getCart()
+  .then(cart => {
+    fetchedCart = cart;
+    return cart.getProducts();
+  })
+  .then(products => {
+    return req.user // order과 cart 연결시키기
+    .createOrder()
+    .then(order => {
+      return order.addProducts(products.map(product => {
+        product.orderItem = { quantity: product.cartItem.quantity }; // orderitem 모델에 정의한이름
+      }));
+    })
+    .then(result => {
+      return fetchedCart.setProducts(null); // 주문하면 장바구니 비우기
+    })
+    .then(result => {
+      res.redirect('/orders');
+    })
+    .catch(err => console.log(err));
+  })
+
+  .catch(err => console.log(err));
 };
 
-exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout'
-  });
+exports.getOrders = (req, res, next) => {
+  req.user
+  .getOrders({include: ['products']}) // app.js에서 Order이랑 Product belongsToMany 설정을 했고
+  .then(orders => {
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders
+    });
+  })
+  .catch(err => console.log(err));
 };
