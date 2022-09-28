@@ -49,7 +49,7 @@ exports.getEditProduct = (req, res, next) => {
         path: '/admin/edit-product',
         editing: editMode,
         product: product,
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn // 컨트롤러 auth.js에 저장되어있는
       });
     })
     .catch(err => console.log(err));

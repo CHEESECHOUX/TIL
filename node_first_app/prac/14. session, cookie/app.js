@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: 'my secret', 
-    resave: false,
+    resave: false, // 모든 응답이 아닌 세션이 변경되었을 때만 저장
     saveUninitialized: false,
     store: store,
   })
