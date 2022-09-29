@@ -19,16 +19,32 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findByPk(1)
+  const email = req.body.email;
+  const password = req.body.password;
+  User.findOne({ email: email }) // 데이터베이스에
     .then(user => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      req.session.save(err => {
-        console.log(err);
-        res.redirect('/');
-      });
-    })
-    .catch(err => console.log(err));
+      if (!user) { // 사용자가 없다면
+        return res.redirect('/login');
+      }
+      bcrypt // email이 있으면 password 검증
+        .compare(password, user.password) // 사용자가 입력한 비번, DB내에 저장 되어있는 비번
+        .then(doMatch => {
+          if (doMatch) {
+            req.session.isLoggedIn = true; // 사용자가 일치한 경우에만 세션
+            req.session.user = user; // DB의 user
+            return req.session.save(err => {
+              console.log(err);
+              res.redirect('/'); // 올바른 비번 입력시 시작페이지로 리다이렉트
+            });
+          }
+          res.redirect('/login'); // 비번 틀리면
+        })
+        .catch(err => {
+          console.log(err);
+          res.redirect('/login');
+        });
+      })
+      .catch(err => console.log(err));
 };
 
 exports.postSignup = (req, res, next) => {
