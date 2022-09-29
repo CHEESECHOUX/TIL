@@ -1,7 +1,10 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('admin/edit-product', {
+  // if (!req.session.isLoggedIn) {   // 라우터 보호 (미들웨어로 옮김)
+  //   return res.redirect('/login'); // 세션이 로그인 되어있지 않으면
+  // }
+  res.render('admin/edit-product', {  // 세션이 로그인 되어있다면
     pageTitle: 'Add Product',
     path: '/admin/add-product',
     editing: false,
@@ -81,16 +84,16 @@ exports.getProducts = (req, res, next) => {
   Product.find()
     // .select('title price -_id')
     // .populate('userId', 'name')
-  .then(products => {
-    console.log(products);
-    res.render('admin/products', {
-      prods: products,
-      pageTitle: 'Admin Products',
-      path: '/admin/products',
-      isAuthenticated: req.session.isLoggedIn
-    });
-  })
-  .catch(err => console.log(err));
+    .then(products => {
+      console.log(products);
+      res.render('admin/products', {
+        prods: products,
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+        isAuthenticated: req.session.isLoggedIn
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
