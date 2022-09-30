@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+const csrf = require('csurf');
 
 const errorController = require('./controllers/error');
 const sequelize = require('./util/database');
@@ -24,6 +25,7 @@ const options = {
 
 const app = express();
 const store = new MySQLStore(options);
+const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -33,6 +35,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 const { all } = require('./routes/admin');
 
+// 미들웨어로 사용
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
@@ -42,9 +45,10 @@ app.use(
     saveUninitialized: false,
     store: store,
   })
-); 
+);
+app.use(csrfProtection);
 
-app.use((req, res, next) => {
+app.use((req, res, next) => { // user 추출 미들웨어
   if (!req.session.user) {
     return next();
   }
@@ -54,6 +58,12 @@ app.use((req, res, next) => {
       next();
     })
     .catch(err => console.log(err));
+});
+
+app.use((req, res, next) => { // 실행되는 모든 요청에 의해 랜더링 되는 뷰에서 csrf 적용
+  res.locals.isAuthenticated = req.session.isLoggedIn // locals로 뷰에 입력할 로컬 변수 설정
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use('/admin', adminRoutes);
