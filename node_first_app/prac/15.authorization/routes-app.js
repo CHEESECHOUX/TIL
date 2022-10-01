@@ -36,6 +36,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 const { all } = require('./routes/admin');
 
+// 미들웨어로 사용
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
@@ -47,9 +48,9 @@ app.use(
   })
 );
 app.use(csrfProtection);
-app.use(flash());
+app.use(flash()); // 세션 초기화 이후에 flash 코드 작성
 
-app.use((req, res, next) => {
+app.use((req, res, next) => { // user 추출 미들웨어
   if (!req.session.user) {
     return next();
   }
@@ -61,8 +62,8 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn
+app.use((req, res, next) => { // 실행되는 모든 요청에 의해 랜더링 되는 뷰에서 csrf 적용
+  res.locals.isAuthenticated = req.session.isLoggedIn // locals로 뷰에 입력할 로컬 변수 설정
   res.locals.csrfToken = req.csrfToken();
   next();
 });
