@@ -1,9 +1,9 @@
 // if문. for문. while문. switch-case문. '문단'
 
 var sum = 0
-for (let i = 1 ; i <= 10 ; i++ { // i가 for문 안에서만 존재
+for (let i = 1 ; i <= 10 ; i++) { // i가 for문 안에서만 존재
   sum += i
-})
+}
 console.log(sum)
 console.log(i) // reference error
 
