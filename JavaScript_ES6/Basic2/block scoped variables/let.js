@@ -15,9 +15,9 @@ f()
 
 
 // let 재할당 가능
-let a = 1
-a = 2
-console.log(a)
+let d = 1
+d = 2
+console.log(d)
 
 
 // 반복문 내에서의 함수 실행시
@@ -31,7 +31,7 @@ funcs.forEach(function (f) {
   f()
 })
 
-// 정답
+/* 정답
 [
   function(){ console.log(i); }, // for문이 돌고 forEach 실행될 때
   function(){ console.log(i); },
@@ -40,3 +40,4 @@ funcs.forEach(function (f) {
   ...
 
 ]
+*/
