@@ -36,7 +36,7 @@ const one = Object.create({}, {
   book: {value: 100, enumerable: false},
   sports: {value: 200, enumerable: true}
 });
-Object.assign(obj2, one);
+Object.assign(obj2, one); // enumerable true만 복사됨
 console.log(obj2);
 
 
@@ -49,15 +49,15 @@ console.log(obj3);
 
 // 값을 작성
 let obj4 = {ten: 10};
-Object.assign(obj4, undefined, null, 200);
-console.log(obj4);
+Object.assign(obj4, undefined, null, 200); // 값으로 작성한 undefined, null, 200은 복사되지 않음.
+console.log(obj4);                         // 열거 가능한 오브젝트가 아니기 때문
 
-const one4 = {un: undefined, nu: null};
+const one4 = {un: undefined, nu: null}; // undefined와 null을 프로퍼티 값으로 작성하면 복사됨.
 Object.assign(obj4, one4);
 console.log(obj4)
 
 
 // 값과 오브젝트 형태
-const obj5 = Object.assign(100, {book5: 200});
+const obj5 = Object.assign(100, {book5: 200}); // Number 인스턴스에 Object를 복사하는 것은 데이터 타입에 맞지 않음.
 console.log(obj5.valueOf());
 console.log(obj5.book5);
