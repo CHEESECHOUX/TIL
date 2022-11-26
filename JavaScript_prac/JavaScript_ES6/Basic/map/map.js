@@ -54,3 +54,13 @@ const obj5 = new Map([{five: 5}]);
 for (let [key, value] of obj5){
   console.log(`${key} : ${value}`);
 };
+
+
+
+
+/*
+Map 오브젝트가 빌트인 오브젝트보다 더 확장성 있다.
+1. Map 오브젝트는 다양한 메서드를 지원
+2. 이터레이션 가능
+3. for of 문으로 전개 가능
+*/
