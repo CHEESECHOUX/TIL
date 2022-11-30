@@ -60,3 +60,50 @@ console.log(obj4.getPoint());
 const list = [];
 list.push("책");
 console.log(list);
+
+
+
+
+// 메서드 작성 방법
+class Point5 {
+  setPoint(point5){
+    this.point5 = point5;
+  }
+  getPoint(){
+    return this.point5;
+  };
+};
+console.log(typeof Point5);
+
+
+
+
+// computed name
+// 메서드 이름 조합
+const name = "Point6";
+class Point6 {
+  static ["get" + name](add){ // 메서드 이름이 getPoint 가 됨
+    return add ? 100 : 50;
+  }
+};
+console.log(Point6["get" + name](true));
+
+
+
+// class 작성 기준
+// 1. prototype에 연결하지 않음
+const Point7 = class {
+  setPoint(point7){
+    this.point7 = point7;
+  }
+};
+console.log(Point7.prototype.setPoint);
+
+
+// 2. 클래스 밖에서 메서드 연결
+const Point8 = class { };
+const obj8 = new Point8();
+Point8.prototype.getPoint = function(){
+  return 100;
+};
+console.log(obj8.getPoint());
