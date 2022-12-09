@@ -19,6 +19,7 @@ Promise.resolve(obj2).then((param) => {
 
 
 // thenable
+// Promise.resolve() 의 파라미터에 then() 을 작성한 형태
 const obj3 = Promise.resolve({
   then(resolve, reject){
     resolve([1, 2]);
