@@ -23,4 +23,4 @@ function solution(s) {
     }
   }
   return answer;
-}ㄴ
+}
