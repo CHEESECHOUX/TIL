@@ -10,11 +10,10 @@ function solution(n) {
   return answer;
 }
 
-console.log((solution(144)));
-console.log((solution(976)));
+console.log(solution(144));
+console.log(solution(976));
 // console.log(31.240998703626616 % 1);
 // console.log(12 % 1);
-
 
 //
 function solution(n) {
