@@ -18,3 +18,4 @@ input = fs
 
 console.log(1);
 console.log(0);
+// O(1)
