@@ -7,14 +7,14 @@
 m + a + b + c = n
 */
 
+/*
 const fs = require("fs");
-let n = fs
+let input = fs
   .readFileSync("input.txt")
   .toString()
   .split("")
   .map((x) => Number(x));
 
-/*
 // 첫번째 풀이 : 시간초과
 
 // m 최댓값
@@ -43,6 +43,10 @@ while (true) {
 console.log(answer);
 */
 
+const fs = require("fs");
+let input = fs.readFileSync("input.txt").toString();
+
+let n = Number(input);
 let m = 0;
 for (let i = 0; i < n; i++) {
   let sum = 0; // 각자리수의 합
@@ -52,7 +56,7 @@ for (let i = 0; i < n; i++) {
   const candidateStr = candidate.toString();
 
   for (let j = 0; j < candidateStr.length; j++) {
-    sum += Number(candidate[j]); // candidateStr 각 자리수의 값을 더함
+    sum += Number(candidateStr[j]); // candidateStr 각 자리수의 값을 더함
   }
 
   sum += candidate; // 각자리수 + 후보값
