@@ -1,5 +1,5 @@
 const fs = require("fs");
-let input = fs.readFileSync("input.txt").toString().split("\n");
+let input = fs.readFileSync("input.txt").toString().trim().split("\n");
 
 input.shift();
 
