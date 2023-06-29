@@ -10,13 +10,13 @@ let sort = input.sort((a, b) => a - b);
 console.log(sort.join("\n"));
 
 // 2. 계수정렬로 푼 것
-let n = Number(input.shift());
+let N = Number(input.shift());
 let arr = input.map((x) => +x); // 문자열을 숫자로 변환
 let max = Math.max.apply(null, arr); // arr에서 최댓값을 찾아 변수 max에 저장
 let arrange = new Array(max);
 arrange.fill(0);
 let answer = "";
-for (let i = 0; i < n; i++) {
+for (let i = 0; i < N; i++) {
   arrange[arr[i] - 1]++; // arr 배열의 각 요소들을 순회하면서 해당 요소의 값에 해당하는 인덱스의 arrange 배열 요소를 1씩 증가시킴
 }
 
