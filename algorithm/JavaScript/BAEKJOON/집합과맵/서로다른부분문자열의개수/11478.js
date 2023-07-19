@@ -6,6 +6,8 @@
 const fs = require("fs");
 let input = fs.readFileSync("input.txt").toString().trim().split(/\s/);
 
+// 통과 코드 - 문자열 이용
+// 문자열 슬라이스가 아닌 부분 문자열을 가져오는 것
 const s = input[0]; // 배열을 문자열로
 let answer = new Set();
 
@@ -15,6 +17,17 @@ for (let i = 0; i < s.length; i++) {
   }
 }
 console.log(answer.size);
+
+// 시간 초과 코드 - 배열 이용
+// 매번 문자열을 슬라이스하고 새로운 문자열을 만드는 작업이 필요함
+const answerSet = new Set();
+
+for (let i = 0; i < input.length; i++) {
+  for (let j = 0; j + i < input.length; j++) {
+    answerSet.add(input.slice(j, j + i).join(""));
+  }
+}
+console.log(answerSet.size);
 
 /*
 바깥쪽 반복문에서 i는 0부터 시작해 1씩 증가
