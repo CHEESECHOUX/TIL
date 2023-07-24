@@ -4,7 +4,7 @@
 */
 
 const fs = require("fs");
-let input = fs.readFileSync("input.txt").toString().trim().split(/\s/);
+let input = fs.readFileSync("input.txt").toString().trim().split(/\s/); // split(" ") 이거랑 같음
 
 // 통과 코드 - 문자열 이용
 // 문자열 슬라이스가 아닌 부분 문자열을 가져오는 것

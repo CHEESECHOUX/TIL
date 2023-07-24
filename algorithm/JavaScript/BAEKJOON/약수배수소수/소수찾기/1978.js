@@ -20,14 +20,16 @@ function isPrime(num) {
   return true;
 }
 
-let count = 0;
-for (let i = 0; i < n; i++) {
-  if (isPrime(nums[i])) {
-    // 여기서 isPrime함수 호출 / i번째 요소가 num이 되는 것
-    count++;
-  }
-}
-console.log(count);
+// let count = 0;
+// for (let i = 0; i < n; i++) {
+//   if (isPrime(nums[i])) {
+//     // 여기서 isPrime함수 호출 / i번째 요소가 num이 되는 것
+//     count++;
+//   }
+// }
+// console.log(count);
+
+console.log(nums.filter((v) => isPrime(v)).length);
 
 /*
 n이 소수인지 판별하기 위해서는 2부터 n-1까지 모든 수로 n을 나누어보는 방식이 있지만

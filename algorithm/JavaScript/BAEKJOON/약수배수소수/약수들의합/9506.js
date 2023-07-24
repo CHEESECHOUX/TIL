@@ -11,7 +11,7 @@ const input = fs.readFileSync("input.txt").toString().split("\n");
 
 for (let i = 0; i < input.length; i++) {
   if (input[i] % i == 0) {
-    const n = parseInt(input[i]); // -1이면 입력이 더이산 없다는 뜻
+    const n = parseInt(input[i]); // input값이 -1이면 입력이 더이상 없다는 뜻
 
     if (n === -1) {
       break;
@@ -23,7 +23,7 @@ for (let i = 0; i < input.length; i++) {
     for (let j = 1; j < n; j++) {
       if (n % j === 0) {
         divisor.push(j);
-        console.log(divisor);
+        // console.log(divisor);
         sum += j;
       }
     }
