@@ -17,7 +17,7 @@ let A = a;
 let B = b;
 
 while (A % B !== 0) {
-  let n = A % B;
+  let n = A % B; // n은 나머지
   if (n !== 0) {
     A = B;
     B = n;
