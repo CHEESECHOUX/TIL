@@ -35,3 +35,10 @@ let minSubArrayLen = function (target, nums) {
 
 console.log(minSubArrayLen(11, [1, 1, 1, 1, 1, 1, 1, 1]));
 console.log(minSubArrayLen(4, [1, 4, 4]));
+
+/*
+- Runtime : 60ms
+- 시간복잡도 : O(n)
+반복문이 중첩되어 있는 것 같지만, 
+right, left 포인터 모두 배열을 한 번씩 통과하기 때문에 배열의 크기인 n에 비례함 
+*/
