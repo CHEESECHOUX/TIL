@@ -33,24 +33,6 @@
 <br><br>
 
 ## ✔️ Tech-Interview
-
-<details>
-  <summary><h3>웹 환경 아키텍처</h3></summary>
-  <ul>
-    <li><strong>
-        Q. 1) 다양한 클라이언트 디바이스(웹, 모바일, 태블릿)에서 서버를 호출할 때 일반적인 3 tier 환경에서 동작하는 전반적인 프로세스에 대해 설명해주세요.
-    </strong></li>
-    <br><br>
-    A. 
-    <br><br>
-
-<li><strong>
-    그 중 특정한 디바이스 혹은 특정한 메뉴의 트래픽이 월등히 높아 서버에 부하가 많이 걸린다면 어떤 방식으로 아키텍처를 구성, 변경 해야 할까요?
-</strong></li>
-
-  </ul>
-</details>
-
 <details>
   <summary><h3>웹 환경 아키텍처</h3></summary>
   <ul>
