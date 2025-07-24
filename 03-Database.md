@@ -80,3 +80,78 @@
     </p>
     <br><br>
 </details>
+
+<details>
+    <summary><h3>실행 계획 분석</h3></summary>
+    <p>일반 SELECT 쿼리 앞에 <code>EXPLAIN</code>을 추가해주면 된다.</p>
+    <ul>
+        <h3>[주요 항목]</h3>
+            <ul>
+                <li>select_type: SELECT 문 유형 (SIMPLE, SUBQUERY, UNION 등)</li>
+                <li>type: 테이블에서 데이터를 읽는 방식 (좋을수록 빠름)</li>
+                <li>possible_keys: 옵티마이저가 사용할 수 있는 인덱스 후보 목록</li>
+                <li>key: 실제로 사용된 인덱스</li>
+                <li>key_len: 사용된 인덱스의 크기 (바이트)</li>
+                <li>ref: 조인할 때 어떤 컬럼이나 상수를 기준으로 연결하는지</li>
+                <li>rows: 이 쿼리에서 읽을 것으로 예상되는 행 수</li>
+                <li>filtered: 조건에 의해 걸러질 것으로 예상되는 비율(%)</li>
+                <li>extra: 실행 방식에 대한 추가 정보 (Using temporary, Using filesort 등)</li>
+            </ul>
+        <br><br>
+        <li><strong>select_type: 쿼리 안에 서브쿼리, UNION 등이 어떻게 구성되어 있는지 보여줌</strong>
+             <ul>
+                <li>복잡한 쿼리 구조(서브쿼리, UNION 등)는 성능 저하의 원인이 될 수 있음</li>
+                <li>특히 DEPENDENT SUBQUERY, DEPENDENT UNION 같은 항목이 보이면 성능 병목 가능성 있음</li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>⭐️ type: 테이블에 어떻게 접근하는지, 실제로 데이터를 어떻게 읽고 있는지를 보여주는 항목</strong><br>
+            <ul>
+                <li>type이 좋을 수록 쿼리가 빠르고 효율적</li>
+                <li>ALL이나 index는 풀 테이블 스캔에 가까워 성능 이슈 가능성이 높다.</li>
+            </ul>
+        </li>
+        <br><br>
+        <li><strong>UNION</strong><br>
+            UNION은 여러 SELECT 결과를 하나로 합치는 기능.<br>
+            결과에서 중복된 행은 제거된다. => 이 과정에서 정렬(SORT)과 비교 연산이 필요해 성능 부담이 크다.<br>
+            <br>
+            DEPENDENT UNION, UNION RESULT는 성능에 안 좋다.<br>
+            <br><br>
+            <strong>UNION 개선하기</strong>
+            <ul>
+                <li>1. UNION은 UNION ALL로 바꾸기<br>
+                    UNION ALL은 중복 제거를 하지 않아, 정렬 비용이 없다.<br>단, 정말 중복 허용해도 되는지를 잘 확인해야 한다.
+                </li>
+                <li>2. 서브쿼리를 최적화해서 결과 집합 크기 줄이기<br>
+                    ex) WHERE 조건을 더 정교하게 걸어서 불필요한 row를 줄이기
+                </li>
+                <li>3. UNION 대신 JOIN 사용을 고려하기<br>
+                    - JOIN이 더 효율적일 수 있음<br>
+                    - 두 SELECT가 같은 조건이나 키를 기준으로 묶을 수 있는 구조라면 JOIN이 더 나음
+                </li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>성능이 좋은 실행 계획 기준</strong>
+            <ul>
+                <li>select_type: SIMPLE, PRIMARY, DERIVED</li>
+                <li>type: system, const, eq_ref</li>
+                <li>extra: Using index</li>
+                <br>
+            </ul>
+             나머지 값들은 성능 저하 가능성이 있으므로 튜닝 대상 후보로 보고 속도 측정을 해보아야 한다.
+            <br><br>
+        </li>
+    </ul>
+    <br>
+    <p>
+        DB 서버는 애플리케이션 서버보다 투입 비용이 훨씬 높기 때문에 확장이 쉽지 않다. 따라서 올바른 SQL 수행을 위한 튜닝이 반드시 선행되어야 한다.<br>
+    </p>
+    <p><strong>* 옵티마이저</strong>: 데이터베이스가 쿼리를 가장 빠르게 실행할 수 있도록 실행 계획을 자동으로 결정하는 엔진<br>
+        <strong>* 풀텍스트 인덱스</strong>: 문자열을 대상으로 검색어 포함 여부, 유사도, 키워드 검색 등을 지원하는 특수 인덱스<br>
+        <strong>* 인덱스 튜닝</strong>: 이미 잘 작성된 쿼리를 더 빠르게 실행시키기 위해 인덱스를 조정<br>
+        <strong>* 쿼리 최적화</strong>: 쿼리 문장 자체를 바꾸거나, 필요하면 테이블 구조까지 변경하는 작업
+    </p>
+    <br><br>
+</details>
