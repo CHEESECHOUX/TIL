@@ -241,3 +241,48 @@
     </ul>
 
 </details>
+
+<details>
+    <summary><h3>중복 쿼리 개선</h3></summary>
+    <p>
+        <strong>DB 접근 횟수를 줄이고, 인덱스를 활용해 응답 시간을 개선</strong>하는 것이 애플리케이션 성능 최적화의 가장 효과적인 방법<br>
+    </p>
+    <br>
+    <ul>
+        <li><strong>1. DB 접근 최소화</strong><br>
+            <ul>
+                <li>쿼리 호출 횟수를 줄이는 것이 가장 우선</li>
+                <li>자주 사용하는 데이터를 캐싱하거나, <strong>한 번에 묶어서 조회하는 방식 고려해보기</strong></li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>2. 로직으로 처리 가능한 것은 로직에서 처리</strong><br>
+            <ul>
+                <li>쿼리로 모든 걸 처리하지 말고, <strong>DB에서 가져온 데이터를 애플리케이션 로직에서 가공</strong><br></li>
+                <li>ex) 필터링, 정렬, 집계 등을 로직 레벨에서 처리</li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>3. 복잡한 조인은 애플리케이션에서 코드로 분리</strong><br>
+            <ul>
+                <li>조인 depth가 깊고 쿼리가 복잡하면 성능 저하 가능</li>
+                <li>해결 방법<br>
+                - 주요 테이블에서 데이터를 먼저 조회<br>
+                - 해당 결과의 키(id 등)를 기준으로 다른 테이블을 개별 조회<br>
+                - <strong>애플리케이션 레벨에서 코드로 결과 조합</strong> => merge(여러 데이터 소스를 하나로 합치기), filter, join(공통 키로 데이터를 연결) 수행<br>
+                </li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>4. 3번은 MSA에서도 유용한 전략</strong><br>
+            <ul>
+                <li><strong>MSA 환경에서는 서비스마다 DB를 분리해두는 경우가 많아, 복잡한 조인을 SQL에서 직접 수행하기 어렵다.</strong><br>
+                이럴 경우, 각 서비스에서 데이터를 API로 조회하고, <strong>애플리케이션 또는 API Gateway에서 데이터를 조합</strong>해 응답을 구성하는 방식이 자주 사용된다.
+                </li>
+                <br>
+            </ul>
+        </li>
+        <br><br>
+    </ul>
+
+</details>
