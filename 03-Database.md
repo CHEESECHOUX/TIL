@@ -385,3 +385,121 @@
         예: 범위 + 해시 같이 조합해서 사용</li>
     </ul>
 </details>
+
+<details>
+    <summary><h3>샤딩</h3></summary>
+    <p>
+        <strong>데이터를 여러 개의 데이터베이스에 분산 저장</strong>하는 방식<br>
+        DBMS가 기본적으로 제공하는 기능이 아니고, 애플리케이션 레벨에서 직접 구현해야 한다.<br>
+    </p>
+    <br>
+    <h3>샤딩 vs 파티셔닝</h3>
+    <ul>
+        <li><strong>파티셔닝</strong>: <strong>하나의 DB 내</strong>에서 테이블을 <strong>논리적으로 분리</strong></li>
+        <li><strong>샤딩</strong>: <strong>서로 다른 물리 DB</strong>에 테이블 데이터를 분산 저장</li>
+    </ul>
+    <ul>
+        급성장하는 서비스는 수천만 ~ 수억 row 단위의 데이터가 빠르게 축적된다.<br>
+        아무리 <strong>쿼리 튜닝이나 인덱스를 최적화해도 물리적인 데이터 양이 지나치게 크면 성능 문제는 불가피</strong>하다.<br><br>
+        <strong>파티셔닝만으로는 한계가 있는 상황에서 샤딩이 필요</strong><br>
+        (= 샤딩은 파티셔닝보다 더 높은 수준의 분산 전략)<br>
+    </ul>
+    <br>
+    <p><strong>샤딩 예시)</strong></p>
+    <ul>
+    <li><strong>회원 테이블</strong><br>
+        대부분 단건 조회 위주이고, <strong>일정 수준까지는 쿼리 튜닝으로 충분히 커버 가능</strong>하다.<br>
+        그러나 <strong>회원 수가 수천만 이상으로 증가</strong>하거나, 로그인/권한 등 유저 기반 <strong>요청이 집중될 경우, 부하 분산을 위해 모듈러 샤딩을 적용</strong>하기도 한다.<br>
+    </li>
+    <br>
+    <li><strong>주문/환불/배송 등 거래성 데이터</strong><br>
+        <strong>주문에 비례해서 쌓이는</strong> 배송 정보, 내 구매 내역 등은 <strong>데이터 사이즈만큼 지속적으로 select, insert, update가 발생</strong>한다.<br>
+        ⇒ 데이터 양과 트래픽이 함께 늘어나 슬로우 쿼리, 장애 가능성 증가. 샤딩을 해줘야 함.
+    </li>
+    </ul>
+    <br>
+    <h3>샤딩의 종류</h3>
+    <p>
+    대부분의 경우 샤딩 키(PK, user_id 등)를 기준으로,<br>
+    <strong>해시 기반(=모듈러 샤딩)</strong> 또는 <strong>범위 기반(=레인지 샤딩)</strong> 방식 중 <strong>하나를 선택</strong>해 데이터를 분산 저장한다.
+    </p>
+    <h4>1. 모듈러 샤딩</h4>
+    <ul>
+        키 값에 모듈러 연산(key % N)을 적용해 데이터를 균등하게 분산<br>
+        ex) user_id % 3 → DB0, DB1, DB2에 분산 저장<br>
+        <br>
+        <li><strong>데이터가 균등하게 분산되지만, 범위 조회는 약함</strong></li>
+        <li>회원, 로그인 히스토리, 유저별 설정 값 등 단건 조회가 많은 데이터</li>
+    </ul>
+    <br>
+    <strong>장점</strong>
+    <ul>
+        <li>특정 유저에만 집중된 요청이 많을 때 유리</li>
+        <li><strong>범위 조회보단 PK 기반 단건 조회 성능이 좋음</strong></li>
+        <li>⇒ user_id별로 조회하기 때문에 user_id % N으로 균등하게 쪼개기만 해도 충분히 효율적</li>
+    </ul>
+    <br>
+    <strong>단점</strong>
+    <ul>
+        <li>범위 조회 시 <strong>모든 DB에 병렬로 쿼리</strong>해야 하므로 성능 저하 가능</li>
+        <li>샤드 수가 바뀌면 전체 분산이 깨짐<br> (= 데이터를 전부 다시 마이그레이션 해야 함. 서비스 중단 없이 확장하기 어려움.)</li>
+    </ul>
+    <br>
+    <h4>2. 레인지 샤딩</h4>
+    <ul>
+        key의 값 범위에 따라 분할 저장<br>
+        ex) order_id 1~1,000,000 → DB A, 1,000,001~2,000,000 → DB B<br>
+        <br>
+        <li>주문, 결제, 배송, 로그 등 <strong>시간순으로 쌓이는 데이터</strong></li>
+    </ul>
+    <br>
+    <strong>장점</strong>
+    <ul>
+        <li>범위 조회 성능이 뛰어남</li>
+        <li>구조 변경이 비교적 유연함 (새 범위만 정의하면 됨)</li>
+        <li>시간 순 정렬/필터가 편리</li>
+    </ul>
+    <strong>단점</strong>
+    <ul>
+        <li>마지막 DB에만 쓰기 쏠림 발생 가능</li>
+        <li>특정 범위에 데이터가 몰릴 경우, 불균형이 생기고 특정 DB만 과부하될 수 있음</li>
+        <li>새로운 범위를 위한 샤드 추가/관리가 필요</li>
+    </ul>
+    <br>
+    * 추가) 일관된 해싱 기반 샤딩<br><br>
+    <details>
+        <summary><strong>왜 주문 같은 데이터는 레인지 샤딩을 많이 쓸까?</strong></summary>
+        <ol>
+        <li><strong>범위 조회가 많기 때문</strong><br>
+            order_id나 created_at으로 범위 조회가 자주 발생<br>
+            모듈러 샤딩이면 이걸 모든 DB에 동시에 쿼리해야 함 → 병렬 쿼리, 성능 저하
+        </li>
+        <li><strong>시간순 정렬이 중요</strong><br>
+            최신 주문보기, 주문 순 정렬<br>
+            레인지 샤딩은 시간 순서에 따라 자연스럽게 분리되어 관리/정렬이 편리함
+        </li>
+        <li><strong>계속 쌓이면서 갱신이 적은 데이터</strong><br>
+            주문 데이터는 한 번 INSERT 되고 거의 안 바뀜<br>
+            데이터 쏠림 문제는 읽기 부하가 아닌, 쓰기 부하 관점에서만 고려하면 됨
+        </li>
+        </ol>
+    </details>
+    <br>
+    <h3>샤딩 적용 절차</h3>
+    <ol>
+        <li><strong>샤딩 키 선정 및 설계</strong><br>
+            - 테이블을 분석하고 샤딩 기준(키)을 설정
+        </li><br>
+        <li><strong>데이터 마이그레이션</strong><br>
+            - 기존 데이터를 샤딩 구조에 맞춰 샤드 DB로 이관
+        </li><br>
+        <li><strong>이중 저장 단계</strong><br>
+            - 일정 기간 동안 기존 DB + 샤딩 DB에 함께 저장하면서 이중 운영<br>
+            - 애플리케이션 레벨에서 분산 저장/조회 로직을 구현
+        </li><br>
+        <li><strong>샤딩 안정화 후 전환 완료</strong><br>
+            - 시스템이 안정화되면 기존 DB 저장 로직 제거<br>
+            - 샤딩 DB만 운영
+        </li>
+    </ol>
+</details>
