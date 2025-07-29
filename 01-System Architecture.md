@@ -305,5 +305,115 @@
         <li>ex) 상품 주문 메시지는 전송 되었지만 결제 실패 등의 이유로 DB 저장 실패 시, 이미 감소된 재고를 다시 복원</li>
     </ul>
     <br>
+    <details>
+    <summary><h3>AMQP (Advanced Message Queuing Protocol)</h3></summary>
+    <p><strong>서로 다른 시스템 간 메시지를 주고받기 위한 메시징 프로토콜 표준</strong><br>
+    HTTP가 웹 통신의 표준이라면, AMQP는 MQ 통신의 표준</p>
+    <br>
+    * 이름에 Advanced가 붙은 이유는?<br>
+    기존에는 MQ 시스템이 회사마다 제각각이었는데,<br>
+    AMQP는 누구나 사용할 수 있는 공개된 메시징 규칙을 만들고, 고급 기능까지 표준으로 정의했기 때문에<br>
+    <br>
+    <h3>AMQP의 특징</h3>
+    <ol>
+        <li><strong>브로커/클라이언트 간 일관된 동작</strong><br>
+        메시지를 송신(Producer)하거나 수신(Consumer)하는 방식을 표준화<br>
+        어떤 AMQP 브로커를 사용하든 동일한 방식으로 통신 가능<br>
+        - 브로커: 메시지 큐 시스템 (ex: RabbitMQ, ActiveMQ)<br>
+        - 클라이언트: AMQP를 사용하는 어플리케이션 또는 시스템<br><br>
+        </li>
+        <li><strong>네트워크 명령어 표준화</strong><br>
+        메시지 송수신 시 사용하는 명령어와 데이터(패킷) 구조를 사전에 정의<br>
+        브로커와 클라이언트 간의 정확한 메시지 해석 보장<br><br>
+        </li>
+        <li><strong>언어 독립성</strong><br>
+        AMQP는 네트워크 프로토콜이므로 특정 언어에 종속되지 않음<br>
+        어떤 언어로도 AMQP 클라이언트를 구현할 수 있고 호환성 확보<br>
+        </li>
+    </ol>
+    <br>
+    <h3>🐰 RabbitMQ가 가장 널리 사용되는 이유</h3>
+    <strong>1. 가볍고 설치/운영이 쉽다.</strong><br>
+    설치와 설정이 간단하고, 운영도 직관적이어서 초보자도 빠르게 사용할 수 있다.<br><br>
+    <strong>2. 기능이 풍부하면서도 유연하다.</strong><br>
+    다양한 Exchange 타입(Direct, Fanout, Topic, Headers)을 지원해 라우팅 유연성이 높다.<br>
+    또한 메시지 우선순위, 지연 큐(Delay Queue), TTL, Dead Letter Queue 등 고급 기능도 제공한다.<br><br>
+    <strong>3. 클러스터링과 플러그인 지원 (확장성과 실무 유연성)</strong><br>
+    - 고가용성을 위한 클러스터 구성이 가능해 장애에 대비할 수 있다.<br>
+    - Prometheus, MQTT, STOMP, Shovel 등 다양한 플러그인을 통해 모니터링, 외부 시스템 연동, 프로토콜 확장 등이 가능하다.<br><br>
+    엄청난 처리량(= 단위 시간당 수십만~수백만 메시지 처리)이나 실시간 분석이 필요한 경우가 아니라,<br>
+    서비스 간 메시지 전달, 알림, 이벤트 처리, 작업 분산이 목적이라면 RabbitMQ는 쉽고 빠르고 충분한 선택<br><br>
+    ✔ 일반적인 서비스의 비동기 처리 (작업 분산, 알림, 이벤트 전달) → <strong>RabbitMQ</strong><br>
+    ✔ 실시간 로그 수집, 이벤트 스트리밍, 대용량 분석 처리 → <strong>Kafka</strong><br>
+    <br>
+    <h3>AMQP 라우팅 모델 구성 요소</h3>
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+            <th>구성 요소</th>
+            <th>설명</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>Exchange</strong></td>
+            <td>Publisher로부터 메시지를 받아 어떤 Queue로 보낼지 결정하는 라우터</td>
+        </tr>
+        <tr>
+            <td><strong>Queue</strong></td>
+            <td>실제 메시지를 저장하고 Consumer가 수신하는 메시지 저장소</td>
+        </tr>
+        <tr>
+            <td><strong>Binding</strong></td>
+            <td>Exchange와 Queue 사이의 연결 관계를 정의하는 라우팅 규칙</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>※ 라우팅 키: 메시지를 보낼 때 Publisher가 메시지 헤더에 포함시켜 보내는 문자열<br>
+    이 문자열을 기반으로 Exchange가 메시지를 어떤 Queue로 보낼지 판단함.<br>
+    라우팅 키는 Exchange 타입에 따라 다르게 쓰임!<br><br>
+    - Routing Key = 발신 주소<br>
+    - Binding Key = 수신 조건</p>
+    <br>
+    <h3>AMQP의 Exchange 종류</h3>
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+            <th>종류</th>
+            <th>설명</th>
+            <th>라우팅 방식</th>
+            <th>사용 예시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>Direct</strong></td>
+            <td>Routing key가 정확히 일치하는 Queue로 전달</td>
+            <td>routing key == binding key</td>
+            <td>주문 상태 알림, 특정 사용자 메시지</td>
+        </tr>
+        <tr>
+            <td><strong>Fanout</strong></td>
+            <td>연결된 모든 Queue로 메시지를 전달 (브로드캐스트)</td>
+            <td>Routing key 무시</td>
+            <td>공지사항, 로그 브로드캐스트</td>
+        </tr>
+        <tr>
+            <td><strong>Topic</strong></td>
+            <td>패턴 기반 라우팅 ('.' 구분자 사용, * / # 와일드카드)</td>
+            <td>유연한 다중 대상 매칭<br>
+            하나의 Queue가 여러 그룹을 유연하게 수신 가능 (카테고리 단위로 받을 수 있음)</td>
+            <td>뉴스 주제, 구독 기반 피드</td>
+        </tr>
+        <tr>
+            <td><strong>Headers</strong></td>
+            <td>메시지 헤더의 key-value 조건으로 라우팅
+            </td>
+            <td>복잡한 조건 기반<br>(라우팅 키로는 부족하고, 조건이 더 복잡할 때)</td>
+            <td>메타데이터 기반 필터링 필요 시</td>
+        </tr>
+        </tbody>
+    </table>
+    </details>
 
 </details>
