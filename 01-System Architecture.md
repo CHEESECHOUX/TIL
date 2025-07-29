@@ -130,6 +130,44 @@
 
 </details>
 
+<details>
+    <summary><h3>수평 확장, 수직 확장</h3></summary>
+    <h3>1. 수평 확장 (Scale Out)</h3>
+    <strong>서버 대수를 늘려 트래픽을 분산 처리</strong><br><br>
+    <ul>
+    <li><strong>적용 상황:</strong> 이벤트 등으로 <u>트래픽이 일시적으로 급증</u>할 때</li>
+    <li><strong>운영 방식:</strong> 한계치 트래픽 규모 예측 → 서버 추가 → 로드 밸런서로 분산 처리</li>
+    <li><strong>장점:</strong> <u>가용성 향상</u>, 트래픽에 탄력적으로 대응 가능</li>
+    <li><strong>단점:</strong>
+        <ul>
+        <li>세션 관리, 데이터 정합성 유지가 복잡</li>
+        <li>서버 수 증가로 인한 <u>운영/관리 비용(인적 자원, 시스템 자원) 증가</u></li>
+        </ul>
+        <br>
+        + 추가) 분산 환경에서 세션 관리, 데이터 정합성 관리 어떻게 하는지 
+    </li>
+    </ul>
+    <br>
+    <h3>2. 수직 확장 (Scale Up)</h3>
+    <strong>기존 서버의 사양을 업그레이드 (CPU, 메모리 확장 or 고성능 서버 교체)</strong><br><br>
+    <ul>
+    <li><strong>적용 상황:</strong>
+        <ul>
+        <li><u>단일 트랜잭션 비즈니스 로직</u>이 매우 복잡하거나</li>
+        <li><u>대량 데이터 처리가 필요하고, 통계와 집계, 배치</u>등의 처리 주 업무인 서버</li>
+        </ul>
+    </li>
+    <li><strong>판단 기준:</strong> CPU, 메모리 사용률이 <u>60% 를 초과</u>해 지속적으로 증가할 때</li>
+    <li><strong>장점:</strong> 분산 시스템보다 <u>관리 용이</u></li>
+    <li><strong>단점:</strong>
+        <ul>
+        <li>서버 교체 시 <u>다운타임 발생</u> 가능</li>
+        <li><u>확장 한계</u> 존재 (하드웨어 물리적 한계)</li>
+        </ul>
+    </li>
+    </ul>
+</details>
+
 <br><br>
 
 # ✔️ Tech-Interview
