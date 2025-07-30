@@ -185,15 +185,20 @@
         <strong>1. URL 규칙</strong><br>슬래시(/)로 계층 표현, 마지막 슬래시 생략<br>
         </li><br>
         <li>
-        <strong>2. 대시(-) 사용</strong><br>언더바(_) 대신 대시(-) 사용 → 가독성 향상<br>
+        <strong>2. 대시(-) 사용</strong><br>언더바(_) 대신 대시(-) 사용<br>
         </li><br>
-        <li><strong>3. 소문자 사용</strong><br>URI는 항상 소문자 → 일관성, 단순함 유지</li><br>
+        <li><strong>3. 소문자 사용</strong><br>URI는 항상 소문자 → 일관성, 단순함 지향</li><br>
         <li>
-        <strong>4. 단순한 구조 유지</strong><br>하나의 리소스에는 단수/복수 URL만 허용 (멱등성 보장)<br>
+        <strong>4. 단순한 구조로 작성</strong><br>하나의 리소스에는 단수/복수 URL만 허용<br>
+        구조가 일관되면 HTTP 메서드 설계를 올바르게 하기 쉬워지고, 그 결과로 멱등성도 자연스럽게 확보가 됨<br>
+        <br>
+        <strong>* 멱등성: 같은 요청을 여러 번 보내더라도 결과가 변하지 않는 성질</strong><br>
+        - GET, PUT(전체 덮어쓰기라서 결과가 항상 그대로), DELETE → 멱등성 있음<br>
+        - POST(요청 할 때마다 새로운 데이터 생김), PATCH(부분 수정으로 데이터 누적이 가능해 매번 결과 달라질 수 있음) → 멱등성 없음<br>
         예: <code>/orders</code>, <code>/orders/1</code>
-        </li><br>
+        </li><br><br>
         <li>
-        <strong>5. HTTP 메서드를 URL에 노출하지 않기</strong><br>
+        <strong>5. URL에 HTTP 메서드 노출하지 않기</strong><br>
         예: <code>/getUser</code> X
         </li><br>
         <li>
@@ -212,7 +217,7 @@
         예: <code>/v1/orders</code>
         </li><br>
         <li>
-        <strong>9. 쿼리 파라미터 사용</strong> (정렬, 필터, 페이징 등)
+        <strong>9. 리소스에 대한 정렬, 필드에 대한 필터, 페이징은 쿼리 파라미터 사용</strong>
         <ul>
             <li>정렬: <code>?sort=created_at</code></li>
             <li>필터: <code>?status=active</code></li>
@@ -224,6 +229,8 @@
         → 기획자나 현업도 쉽게 테스트 가능해야 함
         </li>
     </ul>
+    <br>
+    API는 일관성, 명확성, 단순성을 기반으로 설계해야 하며, 팀 전체가 쉽게 이해하고 테스트할 수 있도록 문서화와 표준화가 중요하다.
     <br>
     + 추가) RESTful 기반 설계 외에 어떤 API 설계 방법? 요즘 RESTful API를 많이 사용하는 이유
 
