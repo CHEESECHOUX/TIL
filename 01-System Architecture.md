@@ -170,6 +170,8 @@
 
 <details>
     <summary><h3>API 설계 기본 원칙</h3></summary>
+    <code>Q. API를 설계할 때 필요한 기본 원칙들과 지원자가 API를 작성할 때 가장 중요하게 생각하는 요소에 대해서 설명해주세요.</code>
+    <br><br>
     <h3>RESTful 기본 개념</h3>
     <ul>
         <li>리소스를 <strong>URI</strong>로 표현</li>
@@ -251,7 +253,6 @@
         <p>A. 병목 지점을 파악해서 서버를 늘리거나 DB의 수행 속도를 개선해야 한다. 정도의 답변은 아쉬움.
         </p>
         </li>
-
     </ul>
 
 </details>
