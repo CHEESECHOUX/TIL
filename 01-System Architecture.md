@@ -191,11 +191,11 @@
         <li>
         <strong>4. 단순한 구조로 작성</strong><br>하나의 리소스에는 단수/복수 URL만 허용<br>
         구조가 일관되면 HTTP 메서드 설계를 올바르게 하기 쉬워지고, 그 결과로 멱등성도 자연스럽게 확보가 됨<br>
+        예: <code>/orders</code>, <code>/orders/1</code><br>
         <br>
         <strong>* 멱등성: 같은 요청을 여러 번 보내더라도 결과가 변하지 않는 성질</strong><br>
         - GET, PUT(전체 덮어쓰기라서 결과가 항상 그대로), DELETE → 멱등성 있음<br>
         - POST(요청 할 때마다 새로운 데이터 생김), PATCH(부분 수정으로 데이터 누적이 가능해 매번 결과 달라질 수 있음) → 멱등성 없음<br>
-        예: <code>/orders</code>, <code>/orders/1</code>
         </li><br><br>
         <li>
         <strong>5. URL에 HTTP 메서드 노출하지 않기</strong><br>
@@ -618,5 +618,115 @@
         </tbody>
     </table>
     </details>
+
+</details>
+
+<br>
+
+## 배포 시스템
+
+<details>
+    <summary><h3>CI/CD</h3></summary>
+    <details>
+        <summary><strong> CI/CD가 가져야 할 특징과 기능에 대해서 설명해주세요.<br> 본인이 전사에서 사용할 공통 CI/CD 솔루션을 만든다고 가정했을 때 어떤 기능을 넣어야 할지 각 프로세스 단위로 설명해주실 수 있을까요?</strong></summary>
+        <br>
+        <h3>CI/CD란?</h3>
+        <ul>
+            <li><strong>CI (지속적 통합)</strong>: 개발자의 코드를 메인 브랜치에 병합하고, 자동 빌드 및 테스트 실행</li>
+            <li><strong>CD (지속적 배포)</strong>: 테스트 통과 후 운영 환경까지 자동 배포 (Delivery/Deployment)</li>
+        </ul>
+        <br>
+        <h3>CI/CD 각 프로세스 단위 기능</h3>
+        <h4>🔸 코드 병합 및 빌드</h4>
+        <ul>
+        <li>Git 기반 버전 관리</li>
+        <li>커밋/머지 시 자동 빌드 트리거</li>
+        <li>도커 이미지 생성</li>
+        <li>빌드 버전 명명 규칙 자동화 (예: [티켓명]-[모듈명]-[yyyyMMddHHmmss])</li>
+        </ul>
+        <h4>🔸 테스트 자동화</h4>
+        <ul>
+        <li>유닛 테스트 / 통합 테스트 자동 실행</li>
+        <li>테스트 실패 시 병합 차단 또는 알림</li>
+        <li>결과 리포트 생성</li>
+        </ul>
+        <h4>🔸 배포 자동화</h4>
+        <ul>
+        <li>롤링 / 블루그린 / 카나리 등 다양한 배포 전략 지원</li>
+        <li>환경별 배포 단계 (Dev → Stage → Prod)</li>
+        <li>배포 Progress Viewer</li>
+        <li>배포 Lock / Unlock 기능</li>
+        </ul>
+        <h4>🔸 롤백 지원</h4>
+        <ul>
+        <li>재빌드 없이 이전 버전으로 즉시 전환</li>
+        <li>버전별 트래픽 라우팅 제어</li>
+        <li>장애 발생 시 자동 Rollback 옵션</li>
+        </ul>
+        <h4>🔸 모니터링</h4>
+        <ul>
+        <li>Endpoint 헬스 체크</li>
+        <li>시스템 리소스(CPU, Memory, Disk) 모니터링</li>
+        <li>전체 로그 수집 및 지표 통합</li>
+        <li>대시보드에서 상태 시각화</li>
+        </ul>
+        <h4>🔸 히스토리 기록</h4>
+        <ul>
+        <li>배포자 / 시간 / 버전 정보 자동 저장</li>
+        <li>릴리즈 버전 태그 자동 생성</li>
+        <li>변경 이력 추적 가능</li>
+        </ul>
+        <h4>🔸 알림</h4>
+        <ul>
+        <li>배포 시작/종료/결과 Slack·카카오톡·이메일 자동 발송</li>
+        <li>알림을 통한 배포 상황 실시간 공유</li>
+        </ul>
+        <h4>🔸 중앙 관제 연동</h4>
+        <ul>
+        <li>배포 결과를 API 또는 로그 형태로 중앙 시스템에 기록</li>
+        <li>장애 발생 시 중앙 관제 시스템에서 추적 가능</li>
+        </ul>
+        <h4>🔸 통계 및 시각화</h4>
+        <ul>
+        <li>전체 배포 현황 대시보드</li>
+        <li>로그 뷰어</li>
+        <li>메트릭 기반 시각화 그래프 제공</li>
+        </ul>
+    </details>
+    <br>
+    <details>
+        <summary><strong>Q2. 애플리케이션의 다운타임을 최소화하기 위한 기본적인 배포 방식을 설명해주세요.</strong></summary>
+        <br>
+        💡 다운타임: 사용자나 외부 시스템이 서비스에 접근할 수 없는 시간<br>
+        <br>
+        A. 롤링, 블루/그린, 카나리 배포에 대해 설명
+    </details>
+    <br>
+    <details>
+        <summary><strong>Q3. 서버 점검 페이지 없이 365일 24시간 내내 애플리케이션이 운영되기 위한 배포 전략이나 필요한 시스템 구성은 어떤 것이 있을까요?</strong></summary>
+        <br>
+        💡 무중단 운영을 위한 배포 전략 및 시스템 구성을 물어보는 것!<br>
+        <br>
+        <ul>
+            <li><strong>배포 전략</strong><br> 블루/그린 또는 카나리 방식 적용</li>
+            <li><strong>트래픽 분리</strong><br> LB/Ingress 기반 헬스체크 후 안전한 전환</li>
+            <li><strong>자동화 도구</strong><br> GitHub Actions, ArgoCD, Spinnaker 등</li>
+            <li><strong>모니터링</strong><br> Prometheus, Grafana, ELK, CloudWatch 등 활용</li>
+            <li><strong>알림 및 기록</strong><br> 배포 이력 자동 기록 + Slack 알림</li>
+            <li><strong>고가용성 인프라</strong><br> Auto Scaling, Multi-AZ 구성, DB 이중화</li>
+            <li><strong>중앙 통제</strong><br> 로그 및 메트릭 통합 수집, 관제 대시보드</li>
+        </ul>
+    </details>
+    <br>
+    <details>
+        <summary><strong>+ 별도로 배포 시스템이 분리되어야 하는 경우</strong></summary>
+        <br>
+        <ul>
+            <li><strong>보안이 중요한 경우:</strong> 금융 시스템, 민감한 데이터 분리 필요</li>
+            <li><strong>특수 인프라:</strong> IoT, OTA 등 고유 배포 환경</li>
+            <li><strong>외부 협력사:</strong> 파트너와 공동 개발 시 별도 구성 필요</li>
+            <li><strong>레거시 시스템:</strong> 완전한 통합 전까지 분리 유지</li>
+        </ul>
+        단, 이런 경우에도 전사 인프라에 영향을 주지 않도록 <strong>격리 및 관제 연동</strong>이 필요함!
 
 </details>
