@@ -168,6 +168,65 @@
     </ul>
 </details>
 
+<details>
+    <summary><h3>API 설계 기본 원칙</h3></summary>
+    <h3>RESTful 기본 개념</h3>
+    <ul>
+        <li>리소스를 <strong>URI</strong>로 표현</li>
+        <li><strong>HTTP 메서드</strong>로 <strong>자원에 대한 행위를 요청</strong> (GET, POST, PUT, DELETE 등)</li>
+        <li><strong>JSON 포맷</strong>으로 요청/응답 본문 처리</li>
+    </ul>
+    <br>
+    <h3>RESTful API 설계 규칙</h3>
+    <ul>
+        <li>
+        <strong>1. URL 규칙</strong><br>슬래시(/)로 계층 표현, 마지막 슬래시 생략<br>
+        </li><br>
+        <li>
+        <strong>2. 대시(-) 사용</strong><br>언더바(_) 대신 대시(-) 사용 → 가독성 향상<br>
+        </li><br>
+        <li><strong>3. 소문자 사용</strong><br>URI는 항상 소문자 → 일관성, 단순함 유지</li><br>
+        <li>
+        <strong>4. 단순한 구조 유지</strong><br>하나의 리소스에는 단수/복수 URL만 허용 (멱등성 보장)<br>
+        예: <code>/orders</code>, <code>/orders/1</code>
+        </li><br>
+        <li>
+        <strong>5. HTTP 메서드를 URL에 노출하지 않기</strong><br>
+        예: <code>/getUser</code> X
+        </li><br>
+        <li>
+        <strong>6. URI depth 제한</strong><br>가급적 얕게 구성, 최대 4단계 권장<br>
+        예: <code>/shops/1/orders/2/items</code> (지양)
+        </li><br>
+        <li>
+        <strong>7. 의미에 맞는 HTTP 상태 코드 사용</strong>
+        <ul>
+            <li>200 OK, 201 Created, 204 No Content</li>
+            <li>400 Bad Request, 401 Unauthorized, 404 Not Found 등</li>
+        </ul>
+        </li><br>
+        <li>
+        <strong>8. API 버전 명시</strong><br>
+        예: <code>/v1/orders</code>
+        </li><br>
+        <li>
+        <strong>9. 쿼리 파라미터 사용</strong> (정렬, 필터, 페이징 등)
+        <ul>
+            <li>정렬: <code>?sort=created_at</code></li>
+            <li>필터: <code>?status=active</code></li>
+            <li>페이징: <code>?page=2&amp;limit=10</code></li>
+        </ul>
+        </li><br>
+        <li>
+        <strong>10. 문서화</strong><br>API 명세서 제공 (Swagger, Postman 등)<br>
+        → 기획자나 현업도 쉽게 테스트 가능해야 함
+        </li>
+    </ul>
+    <br>
+    + 추가) RESTful 기반 설계 외에 어떤 API 설계 방법? 요즘 RESTful API를 많이 사용하는 이유
+
+</details>
+
 <br><br>
 
 # ✔️ Tech-Interview
