@@ -2,7 +2,7 @@
 
 <br>
 
-## ✔️ 데이터베이스 개선
+## 데이터베이스 개선
 
 <details>
     <summary><h3>인덱스</h3></summary>
@@ -289,7 +289,7 @@
 
 <br>
 
-## ✔️ 대용량 테이블의 처리 기법
+## 대용량 테이블의 처리 기법
 
 <details>
     <summary><h3>Write, Read 분리와 복제</h3></summary>
