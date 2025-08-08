@@ -28,6 +28,11 @@
     </p>
     <br>
     <h3>부하 분산 알고리즘</h3>
+    <h3>✔️ 정적(static) 방식</h3>
+    <ul>
+        <li>사전에 설정된 기준에 따라 트래픽 분산</li>
+        <li>서버 상태 변화 고려 X</li>
+    </ul>
     <h4>1. Round Robin (라운드 로빈)</h4>
     <ul>
         <li>서버에 순서대로 요청을 분산</li>
@@ -40,24 +45,30 @@
     <ul>
         <li>각 서버의 성능이 다를 때 성능 좋은 서버에 더 많은 요청 할당</li><br>
     </ul>
-    <h4>3. Dynamic Weighted Round Robin (다이나믹 가중 라운드 로빈)</h4>
-    <ul>
-        <li>서버 응답 시간, 지연 시간 등을 기준으로 <strong>실시간 가중치 조정</strong></li><br>
-    </ul>
-    <h4>4. Least Connection (최소 연결 수 기반)</h4>
-    <ul>
-        <li>현재 연결된 클라이언트 수가 가장 적은 서버에 요청 분산</li>
-        <li>요청 처리 시간이 다양한 환경에 효율적</li><br>
-    </ul>
-    <h4>5. Least Response Time (최소 응답 시간 기반)</h4>
-    <ul>
-        <li>응답 시간이 가장 빠른 서버로 요청을 분산</li><br>
-    </ul>
-    <h4>6. IP Hash (IP 해시 기반)</h4>
+    <h4>3. IP Hash (IP 해시 기반)</h4>
     <ul>
         <li>클라이언트 IP를 해싱해 항상 같은 서버로 요청을 보냄</li>
         <li>세션 유지를 위해 사용 (ex. 로그인 유지, 장바구니 등)</li>
         <li>세션 고정(sticky session)이 필요한 서비스에서 사용</li><br>
+    </ul>
+    <br>
+    <h3>✔️ 동적 방식</h3>
+    <ul>
+        <li>실시간 서버 상태(부하, 응답 시간 등)를 기준으로 분산</li>
+        <li>서버 성능/상태 반영</li>
+    </ul>
+    <h4>1. Dynamic Weighted Round Robin (다이나믹 가중 라운드 로빈)</h4>
+    <ul>
+        <li>서버 응답 시간, 지연 시간 등을 기준으로 <strong>실시간 가중치 조정</strong></li><br>
+    </ul>
+    <h4>2. Least Connection (최소 연결 수 기반)</h4>
+    <ul>
+        <li>현재 연결된 클라이언트 수가 가장 적은 서버에 요청 분산</li>
+        <li>요청 처리 시간이 다양한 환경에 효율적</li><br>
+    </ul>
+    <h4>3. Least Response Time (최소 응답 시간 기반)</h4>
+    <ul>
+        <li>응답 시간이 가장 빠른 서버로 요청을 분산</li><br>
     </ul>
     <br><br>
     <h3>실무에서 자주 쓰이는 알고리즘</h3>
