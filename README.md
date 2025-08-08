@@ -14,11 +14,11 @@
 <br>
 
 ### Operating Systems
-- [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20System.md)
+- [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems.md)
 <br>
 
 ### Databases
-- [Databases](https://github.com/CHEESECHOUX/TIL/blob/main/03-Database.md)
+- [Databases](https://github.com/CHEESECHOUX/TIL/blob/main/03-Databases.md)
 <br>
 
 ### Computer Networks
