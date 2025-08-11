@@ -38,16 +38,16 @@
                 <ol>
                     <li>인덱스 칼럼에 함수나 연산이 적용된 경우
                         <pre><code>
-            WHERE SUBSTRING(name, 1, 3) = 'Choi';
+            WHERE SUBSTRING(name, 1, 4) = 'Choi';
             WHERE column1 + 10 = 20;
             WHERE CONCAT(first_name, last_name) = 'JisooChoi';
                         </code></pre>
                     </li>
                 <li>
-                    부정형 비교(조건 거부) 사용 시
+                    부정형 비교(조건 거부) 사용 시<br>
+                    (긍정형 비교는 인덱스를 타지만 데이터 분포에 따라 효과가 거의 없을 수 있다.)
                     <pre><code>
             WHERE status != 'active';
-            WHERE age > 30;
             WHERE id NOT IN (1, 2, 3);
                     </code></pre>
                 </li>
@@ -103,7 +103,7 @@
             </ul>
         <br><br>
         <li><strong>select_type: 쿼리 안에 서브쿼리, UNION 등이 어떻게 구성되어 있는지 보여줌</strong>
-             <ul>
+            <ul>
                 <li>복잡한 쿼리 구조(서브쿼리, UNION 등)는 성능 저하의 원인이 될 수 있음</li>
                 <li>특히 DEPENDENT SUBQUERY, DEPENDENT UNION 같은 항목이 보이면 성능 병목 가능성 있음</li>
             </ul>
@@ -144,7 +144,7 @@
                 <li>extra: Using index</li>
                 <br>
             </ul>
-             나머지 값들은 성능 저하 가능성이 있으므로 튜닝 대상 후보로 보고 속도 측정을 해보아야 한다.
+            나머지 값들은 성능 저하 가능성이 있으므로 튜닝 대상 후보로 보고 속도 측정을 해보아야 한다.
             <br><br>
         </li>
     </ul>
@@ -163,11 +163,13 @@
 <details>
     <summary><h3>커넥션 풀</h3></summary>
     <p>
+        * 커넥션 풀(Connection Pool): <strong>DB 연결을 미리 만들어두고 재사용</strong>함으로써 성능을 높이는 방식<br>
+        * 커넥션 풀 사이즈: <strong>동시에 몇 개의 DB 연결</strong>을 허용할 것인지 설정<br>
+        <br><br>
         데이터베이스 커넥션 풀 사이즈는 <strong>애플리케이션의 성능, 데이터베이스의 자원, 그리고 실제 트래픽 패턴</strong>을 고려해서 설정 해야한다.<br>
-        잘못 설정된 커넥션 수는 <strong>응답 지연, 리소스 낭비, 시스템 과부하</strong>로 이어질 수 있다.<br>
+        잘못 설정된 커넥션 수는 <strong>응답 지연, 리소스 낭비, 시스템 과부하</strong>로 이어질 수 있다.<br><br>
+        * 데이터베이스 자원: CPU 성능 + 메모리 + 디스크I/O(데이터를 읽고 쓰는 속도) + 네트워크 대역폭(DB와 애플리케이션 서버 간 데이터 전송 속도) + DB 엔진 설정(동시 연결 수와 버퍼 크기 제한)<br>
         <br>
-        - 커넥션 풀(Connection Pool): DB 연결을 미리 만들어두고 재사용함으로써 성능을 높이는 방식<br>
-        - 커넥션 풀 사이즈: <strong>동시에 몇 개의 DB 연결</strong>을 허용할 것인지 설정<br>
     </p>
     <br>
     <h3>커넥션 풀 사이즈 설정 기준</h3>
@@ -175,13 +177,13 @@
     <ul>
         <br>
         <li><strong>고려 요소</strong>
-             <ul>
+            <ul>
                 <li>초당 요청 쿼리 수 (QPS: Queries Per Second)</li>
                 <li>요청당 평균 쿼리 처리 시간</li>
                 <li>최대 피크 시간대의 요청량</li>
-                <li>DB 서버의 max_connections 값</li>
+                <li>DB 서버의 max_connections 값 (DB 서버가 동시에 처리할 수 있는 최대 클라이언트 연결 수)</li>
                 <li>DB 서버의 CPU, 메모리 등 리소스 여유</li>
-                <li>슬로우 쿼리 발생 여부</li>
+                <li>슬로우 쿼리 발생 여부 (느린 쿼리는 커넥션을 오래 붙잡아두기 때문)</li>
             </ul>
         </li>
         <br>
@@ -194,8 +196,8 @@
     <ul>
         <li><strong>성능 병목 원인</strong><br>
             <ul>
-                <li>1. 커넥션 풀 부족 → 대기 시간 증가</li>
-                <li>2. 슬로우 쿼리 → 커넥션 점유 시간 증가 →  풀 고갈</li>
+                <li><strong>1. 커넥션 풀 부족</strong> → 대기 시간 증가</li>
+                <li><strong>2. 슬로우 쿼리</strong> → 커넥션 점유 시간 증가 →  풀 고갈</li>
             </ul>
         </li>
         <li><strong>해결 전략</strong><br>
@@ -318,7 +320,7 @@
     </li>
     <br>
     <li>
-        <strong>버퍼 오버플로우</strong><br>
+        <strong>버퍼 오버플로우(DB 서버 메모리 버퍼)</strong><br>
         슬레이브의 처리 속도가 느려 복제 로그가 버퍼에 과도하게 쌓이고 넘칠 수 있음.
         <ul>
         <li><strong>로그 손실</strong>: 버퍼가 가득 차면 이후 로그가 누락</li>
@@ -345,44 +347,68 @@
     <summary><h3>파티셔닝</h3></summary>
     <p><strong>하나의 테이블을 논리적으로 여러 파티션으로 나눠 데이터를 저장하는 방식.</strong></p>
     <ul>
-        <li>불필요한 파티션은 스캔하지 않아도 되므로 쿼리 속도 향상</li>
-        <li>데이터 용량이 커도 인덱스 성능 유지</li>
-        <li>백업(중요한 데이터를 안전하게 복사해서 보관), 유지보수, 데이터 삭제 등 관리 편의성 향상</li>
+        <li><strong>불필요한 파티션은 스캔하지 않아도 됨</strong> → <strong>쿼리 속도 향상</strong></li>
+        <li>데이터 용량이 커도 <strong>인덱스 성능 유지</strong></li>
+        <li><strong>백업</strong>(중요한 데이터를 안전하게 복사해서 보관), <strong>유지보수, 데이터 삭제</strong> 등 관리 편의성 향상</li>
     </ul>
     <br>
     <h3>언제 사용?</h3>
-    슬로우 쿼리 해소, 데이터 보관 관리, 아카이빙 용이성 등이 목적<br>
+    <strong>슬로우 쿼리 해소, 데이터 보관 관리, 아카이빙 용이성</strong> 등이 목적<br><br>
     <ul>
-        <li>데이터가 시간이 지남에 따라 지속적으로 증가하는 경우</li>
-        <li>특정 테이블에 SELECT, INSERT, UPDATE가 매우 빈번하게 발생하는 경우</li>
-        <li>인덱스 크기 증가에 따른 성능 저하를 완화하고자 할 때</li>
+        <li>데이터가 시간이 지남에 따라 <strong>지속적으로 증가</strong>하는 경우</li>
+        <li>특정 테이블에 <strong>SELECT, INSERT, UPDATE가 매우 빈번하게 발생</strong>하는 경우 (데이터를 나눠서 성능과 관리 효율 높이기 위해)</li>
+        <li><strong>인덱스 크기 증가에 따른 성능 저하</strong>를 완화하고자 할 때</li>
     </ul>
     <br>
     <h3>파티셔닝은 실제로 테이블을 나누는 건가?</h3>
     <ul>
         <li>논리적으로는 하나의 테이블로 간주되지만, 물리적으로는 내부적으로 여러 파티션(파일 단위)으로 저장됨.</li>
-        <li>사용자(개발자)는 하나의 테이블처럼 쿼리하지만, DBMS가 조건에 따라 특정 파티션만 조회 (Database 입장에서 데이터 파일은 나눠져 있음.)</li>
+        <li><strong>사용자(개발자)는 하나의 테이블처럼 쿼리</strong>하지만, DBMS가 조건에 따라 특정 파티션만 조회 (<strong>Database 입장에서 데이터 파일은 나눠져 있음.</strong>)</li>
     </ul>
     <br>
     <h3>파티셔닝 전략</h3>
     <ol>
         <li><strong>수평 파티셔닝</strong><br>
-        → 데이터 행(row)을 기준으로 나눔 (날짜, 범위, 특정 컬럼 값 기준)</li><br>
+        → 데이터 행(row)을 기준으로 나눔 (<strong>날짜, 범위, 특정 컬럼 값</strong> 기준)</li><br>
         <li><strong>수직 파티셔닝</strong><br>
-        → 데이터 열(column)을 기준으로 나눔 (자주 사용하는 칼럼만 별도 분리)</li>
+        → 데이터 열(column)을 기준으로 나눔 (자주 사용하는 <strong>칼럼</strong>만 별도 분리)</li>
     </ol>
     <br>
     <h3>파티셔닝 기준 예시</h3>
     <ul>
         <li><strong>범위 기반 파티셔닝 (Range Partitioning)</strong><br>
-        예: created_at 날짜가 2023, 2024, 2025년별로 분할</li><br>
+            - <strong>시간 순으로 쌓이는 데이터</strong> (로그, 거래내역, 주문 등)<br>
+            - <strong>특정 기간 단위 (년/월/일)</strong>로 데이터 삭제, 백업, 보관이 필요한 경우<br>
+            - 오래된 데이터는 거의 조회를 안 하고, <strong>최신 데이터만 자주 조회</strong>하는 경우<br>
+            ex) created_at 날짜가 2023, 2024, 2025년별로 분할<br>
+        </li><br>
         <li><strong>해시 기반 파티셔닝 (Hash Partitioning)</strong><br>
-        MySQL 내부 해시 함수를 적용해서 n개로 쪼개달라고 하면 n개의 파티션으로 균등하게 분산 저장함<br>
-        → DB가 알아서 해시를 적용하고 분배함</li>
+            - 데이터에 <strong>균등한 분산</strong>이 필요한 경우<br>
+            - <strong>특정 컬럼 값으로 필터링이 다양하게</strong> 들어오는 경우<br>
+            - 시간 순/범위 보다 <strong>랜덤 접근</strong>이 많을 때<br>
+            - 쿼리 대상이 특정 파티션으로 편중되는 걸 방지하고 싶은 경우<br>
+            <br>
+            MySQL 내부 해시 함수를 적용해서 n개로 쪼개달라고 하면 n개의 파티션으로 균등하게 분산 저장함 → DB가 알아서 해시를 적용하고 분배함<br>
+            ex) 회원 데이터 user_id % N 으로 분할 →  데이터 CRUD 시 특정 파티션에만 몰리지 않음
+        </li><br>
         <li><strong>리스트 기반 파티셔닝 (List Partitioning)</strong><br>
-        예: 지역별(서울, 부산, 대구)로 분할</li><br>
+            - 데이터가 <strong>명확한 카테고리 값</strong>으로 나눠질 때<br>
+            - 범위가 아니라 <strong>불연속적 구간</strong>으로 구분되는 경우<br>
+            ex) 지역별(서울, 부산, 대구)로 분할 / 상품 카테고리별(전자제품, 의류, 식품 등) / 국가별 판매 데이터(국가 코드에 따라 데이터 저장소 최적화)
+        </li><br>
         <li><strong>혼합 파티셔닝 (Composite)</strong><br>
-        예: 범위 + 해시 같이 조합해서 사용</li>
+            - <strong>대용량 + 다차원 조건</strong>을 함께 고려해야 할 때<br>
+            - 1차 기준은 범위(ex: 날짜), 2차 기준은 해시나 리스트<br>
+            - 단일 파티셔닝으로는 데이터 분포 불균형이 심한 경우<br>
+            <br>
+            * <strong>거래 로그 테이블 예시</strong><br>
+            1차 created_at 연 단위 분할<br>
+            2차 user_id 해시 분할 → 특정 기간 내에서도 균등 분배<br>
+            <br>
+            * <strong>지역 + 기간 데이터 예시</strong><br>
+            1차 국가 코드 리스트<br>
+            2차 해당 국가 내에서 월 단위 범위 분할<br>
+        </li>
     </ul>
 </details>
 
