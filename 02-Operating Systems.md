@@ -19,13 +19,13 @@
                 <strong>A. 개념 정리</strong><br><br>
                 <strong>1. 블로킹(Blocking) vs 논블로킹(Non-blocking): 제어권</strong><br>
                 호출되는 함수가 결과 나올 때까지 대기하는가? 제어권을 넘겨주고 바로 다른 일을 하러 가는가?<br><br>
-                - <strong>블로킹:</strong> 호출된 함수가 작업이 끝날 때 까지 제어권을 반환하지 않고 기다리는 방식<br>
-                - <strong>논블로킹:</strong> 작업을 요청하면 바로 제어권을 돌려주고, 나중에 콜백이나 이벤트로 결과를 받는 방식. 호출자는 다른 작업 수행 가능.
+                - <strong>블로킹:</strong> 호출된 함수가 <strong>작업이 끝날 때 까지 제어권을 반환하지 않고 기다리는</strong> 방식<br>
+                - <strong>논블로킹:</strong> 작업을 요청하면 <strong>바로 제어권을 돌려주고</strong>, 나중에 콜백이나 이벤트로 결과를 받는 방식. 호출자는 <strong>다른 작업 수행 가능</strong>.
                 <br><br>
-                <strong>2. 동기(Synchronous) vs 비동기(Asynchronous): 직접 체크 </strong><br>
+                <strong>2. 동기(Synchronous) vs 비동기(Asynchronous): <br>작업 완료 통보 방식(호출한 내가 직접 확인 vs 상대방(함수/시스템)이 알아서 알려줌 </strong><br>
                 호출되는 함수의 작업 완료 여부를 함수가 체크하는지를 기준으로 구분<br><br>
-                - <strong>동기:</strong> 호출한 함수가 직접 작업 완료를 기다리거나 체크하는 방식<br>
-                - <strong>비동기:</strong> 호출한 함수가 작업 완료를 기다리지 않고, 완료되면 콜백 등을 통해 알림 받는 방식<br>
+                - <strong>동기:</strong> 호출한 함수가 직접 작업 완료를 확인 → 결과를 받을 때까지 기다리거나, 주기적으로 체크(polling) 해야 함.<br>
+                - <strong>비동기:</strong> 호출한 함수가 작업 완료를 기다리지 않고, 완료되면 콜백/이벤트/Promise 등을 통해 알림 받는 방식<br>
                 <br><br>
                 <strong>블로킹/논블로킹은 시스템 관점!</strong><br>
                 CPU가 그 작업 때문에 묶여 있는지 여부<br>
@@ -39,6 +39,75 @@
                 💡 + 개념적으로는 이렇게 정리하고, 실무에서 어떻게 사용하고 어떤 영향이 있는지도 알아야함!
                 <br><br>
             </p>
+            <details>
+            <summary>콜백 / Promise / 이벤트</summary>
+            <section>
+                <h4>1. 콜백(Callback) — 단발성 비동기 처리의 기초</h4>
+                <ul>
+                <li>간단한 비동기 작업 처리 (파일 읽기, 네트워크 요청, DB 쿼리 등)</li>
+                <li><strong>결과가 1번만 필요한 작업</strong>에 적합</li>
+                <li>작업 완료 시점을 기준으로 실행 순서가 보장됨</li>
+                </ul>
+                <br>
+                <strong>장점</strong>
+                <ul>
+                <li>구현이 간단하고 직관적</li>
+                <li>결과를 바로 함수로 전달 가능</li>
+                </ul>
+                <br>
+                <strong>단점</strong>
+                <ul>
+                <li>콜백 지옥 문제 (중첩 시 가독성 저하)</li>
+                <li>에러 처리 로직이 분산됨 (Promise는 catch 하나로 통합 가능)</li>
+                <li>흐름 추적이 어려움</li>
+                </ul>
+            </section>
+            <section>
+                <h4>2. Promise — 단발성 비동기 처리의 개선</h4>
+                <ul>
+                <li>비동기 작업을 체이닝(.then, .catch)으로 연결 가능</li>
+                <li>async/await으로 동기 코드처럼 작성 가능</li>
+                <li>resolve(성공) / reject(실패)로 결과 전달</li>
+                <li>콜백 지옥 방지 및 가독성 향상</li>
+                </ul>
+                <br>
+                <strong>장점</strong>
+                <ul>
+                <li>가독성 좋고, 흐름 파악이 쉬움</li>
+                <li>에러를 한 곳에서 모아서 처리 가능</li>
+                <li>비동기 로직 순서를 직관적으로 표현 가능</li>
+                </ul>
+                <br>
+                <strong>단점</strong>
+                <ul>
+                <li>여러 번 발생하는 이벤트에는 부적합</li>
+                <li>중간 취소가 어렵고 실행 시점 제어가 까다로움</li>
+                <li>구형 환경에서는 Polyfill 필요</li>
+                </ul>
+            </section>
+            <section>
+                <h4>3. 이벤트(Event) — 반복 발생 비동기 처리</h4>
+                <ul>
+                <li>특정 시점이나 상태 변화가 발생하면 신호를 보내고, 등록된 리스너 실행</li>
+                <li>버튼 클릭, 데이터 스트림, 시스템 전역 알림 등 <strong>여러 번 발생하는 상황</strong>에 적합</li>
+                <li>EventEmitter 패턴, addEventListener 등에서 사용</li>
+                </ul>
+                <br>
+                <strong>장점</strong>
+                <ul>
+                <li>확장성이 뛰어나고, 여러 곳에서 동일 이벤트 처리 가능</li>
+                <li>발생하는 쪽과 처리하는 쪽 코드 분리 가능</li>
+                </ul>
+                <br>
+                <strong>단점</strong>
+                <ul>
+                <li>이벤트 발생 순서 예측이 어려울 수 있음</li>
+                <li>어떤 코드가 이벤트를 트리거했는지 추적 어려움</li>
+                <li>리스너 해제 안 하면 메모리 누수 발생 가능</li>
+                </ul>
+            </section>
+            </details>
+            <br>
             <p><strong>A. 실제 사례</strong><br><br>
                 <strong>예시 1: Node.js</strong><br>
                 Node.js는 싱글 스레드이기 때문에, I/O 작업을 논블로킹, 비동기로 처리함으로써 CPU가 한 작업에 묶이지 않도록 설계된 구조
