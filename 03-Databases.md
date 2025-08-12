@@ -528,3 +528,19 @@
         </li>
     </ol>
 </details>
+
+<br>
+
+## ✔️ Tech-Interview
+
+<details>
+    <summary><strong> 계정은 총 50만개가 생성되어 있습니다.<br>
+        유저 500명이 동시에 로그인을 시도 한다면, 1~50만까지 루프가 500번 실행될까요?
+    </strong></summary>
+    <br>
+    <ul>
+        <li>로그인 과정에서는 <code>WHERE account_key = user_id</code> 같은 <strong>인덱스 포인트 룩업(B+Tree)</strong>으로 해당 계정을 바로 조회합니다.</li>
+        <li>500번 전부 실행되는 것이 아니라, <strong>DB 커넥션 풀 크기</strong>만큼 <strong>동시에 연결</strong>됩니다. <strong>나머지 요청은 대기열에서 순차적으로 처리</strong>됩니다.</li>
+    </ul>
+    <p>500명이 동시에 로그인해도, 각 요청은 <strong>인덱스 조회 1회(+세션 upsert 1회)</strong>로 처리되며, <strong>DB는 풀 크기에 맞춰 동시 처리</strong>합니다.</p>
+</details>
