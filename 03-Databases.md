@@ -421,8 +421,8 @@
     <br>
     <h3>샤딩 vs 파티셔닝</h3>
     <ul>
-        <li><strong>파티셔닝</strong>: <strong>하나의 DB 내</strong>에서 테이블을 <strong>논리적으로 분리</strong></li>
-        <li><strong>샤딩</strong>: <strong>서로 다른 물리 DB</strong>에 테이블 데이터를 분산 저장</li>
+        <li><strong>파티셔닝</strong>: <strong>하나의 DB 내에서 테이블을</strong> <strong>논리적으로 분리</strong></li>
+        <li><strong>샤딩</strong>: <strong>서로 다른 물리 DB에 테이블 데이터를 분산 저장</strong></li>
     </ul>
     <ul>
         급성장하는 서비스는 수천만 ~ 수억 row 단위의 데이터가 빠르게 축적된다.<br>
