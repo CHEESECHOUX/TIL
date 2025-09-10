@@ -14,7 +14,8 @@
 <br>
 
 ### Operating Systems
-- [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems.md)
+- [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-01.Operating%20Systems.md)
+- [Computer Architecture](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-02.Computer%20Architecture.md) - 컴퓨터 구조
 <br>
 
 ### Databases
