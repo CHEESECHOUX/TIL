@@ -16,6 +16,7 @@
 ### Operating Systems
 - [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-01.Operating%20Systems.md)
 - [Computer Architecture](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-02.Computer%20Architecture.md) - 컴퓨터 구조
+- [CPU](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-03.CPU.md) - CPU의 작동 원리
 <br>
 
 ### Databases
