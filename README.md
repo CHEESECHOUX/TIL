@@ -16,7 +16,8 @@
 ### Operating Systems
 - [Operating Systems](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-01.Operating%20Systems.md)
 - [Computer Architecture](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-02.Computer%20Architecture.md) - 컴퓨터 구조
-- [CPU](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-03.CPU.md) - CPU의 작동 원리
+- [CPU Architecture & Operation](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-03.CPU%20Architecture%20%26%20Operation.md) - CPU의 작동 원리
+- [CPU Performance Optimization](https://github.com/CHEESECHOUX/TIL/blob/main/02-Operating%20Systems/02-04.CPU%20Performance%20Optimization.md) - CPU 성능 향상 기법
 <br>
 
 ### Databases
